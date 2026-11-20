@@ -30,11 +30,13 @@ export function SiteHeader() {
 
   const close = () => setOpen(false);
   const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  // Todas las páginas del menú abren con una foto oscura: el header va en claro encima.
+  const overPhoto = !scrolled && !open && NAV_LINKS.some((l) => l.href === pathname);
 
   return (
     <>
       <header
-        className="enter enter-drop fixed inset-x-0 top-0 z-50 px-3 pt-[calc(env(safe-area-inset-top,0px)+0.75rem)] sm:px-6"
+        className={`enter enter-drop fixed inset-x-0 top-0 z-50 px-3 pt-[calc(env(safe-area-inset-top,0px)+0.75rem)] sm:px-6 ${overPhoto ? "on-dark" : ""}`}
         style={{ "--d": "0s" } as CSSProperties}
       >
         <div

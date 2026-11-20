@@ -3,6 +3,7 @@ import Image from "next/image";
 import { BookOpen, Eye, GlobeHemisphereWest, GraduationCap, Target } from "@phosphor-icons/react/ssr";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { PageHeader } from "@/components/ui/PageHeader";
+import directoraFachada from "@/public/hero-vital-salud-movil.jpg";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import directora from "@/public/dra-directora.jpg";
 import panoramica from "@/public/panoramica-arequipa.jpg";
@@ -27,6 +28,7 @@ export default function NosotrosPage() {
   return (
     <>
       <PageHeader
+        image={directoraFachada} imageAlt="Directora del Centro Vital Salud frente al local" imagePosition="50% 28%"
         eyebrow="Nosotros"
         before="Cuidamos a las familias de Arequipa de forma"
         accent="natural"

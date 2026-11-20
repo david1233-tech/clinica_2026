@@ -26,7 +26,7 @@
   --aurora-2: rgb(156 196 58 / 0.35);
   --aurora-3: rgb(26 148 128 / 0.25);
   --shadow: 0 30px 60px -30px rgb(15 53 51 / 0.35);
-  --intro-delay: 2.6s;
+  --intro-delay: 5.9s;
   color-scheme: light;
 }
 
@@ -325,16 +325,147 @@ body {
   }
 }
 
-/* Bienvenida: se oculta antes del primer pintado si ya se vio en la sesión. */
+/* ===== Bienvenida "desde el espacio" (components/layout/SiteIntro) =====
+   Se oculta antes del primer pintado si ya se vio en la sesión. Si el JS no
+   carga, la cortina sube sola a los 8 s para no bloquear la página. */
 :root[data-intro-seen] .site-intro {
   display: none;
 }
 .site-intro {
-  animation: curtain-up 0.9s cubic-bezier(0.76, 0, 0.24, 1) 2.4s forwards;
+  animation: curtain-up 0.9s cubic-bezier(0.76, 0, 0.24, 1) 8s forwards;
+}
+.site-intro.is-playing {
+  animation-delay: 5.7s;
 }
 .site-intro.is-skipped {
   pointer-events: none;
   animation: fade-out 0.35s ease forwards;
+}
+/* Cada pieza espera pausada hasta que el globo arranca (.is-playing). */
+.intro-hud { animation: fade-in 1s ease 0.3s both paused; }
+.intro-photo { animation: intro-photo 1.4s cubic-bezier(0.22, 1, 0.36, 1) 3.5s both paused; }
+.intro-eyebrow { animation: tracking-in 1.1s var(--ease-out-expo) 3.9s both paused; }
+.intro-letter {
+  animation: char-in 1s var(--ease-out-expo) calc(4s + var(--i) * 0.06s) both paused;
+}
+.intro-slogan { animation: rise 0.9s var(--ease-out-expo) 4.6s both paused; }
+.intro-progress { animation: progress-fill 5.7s linear both paused; }
+.is-playing .intro-hud,
+.is-playing .intro-photo,
+.is-playing .intro-eyebrow,
+.is-playing .intro-letter,
+.is-playing .intro-slogan,
+.is-playing .intro-progress {
+  animation-play-state: running;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes intro-photo {
+  from { opacity: 0; transform: scale(1.45); filter: blur(8px); }
+  to { opacity: 1; transform: scale(1.06); filter: blur(0); }
+}
+@keyframes char-in {
+  from { opacity: 0; transform: translateY(0.45em) rotate(8deg); filter: blur(8px); }
+  to { opacity: 1; transform: none; filter: blur(0); }
+}
+@keyframes tracking-in {
+  from { opacity: 0; letter-spacing: 0.9em; filter: blur(4px); }
+  to { opacity: 1; filter: blur(0); }
+}
+@keyframes progress-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes kenburns {
+  from { transform: scale(1.16) translate3d(1.5%, 1%, 0); }
+  to { transform: scale(1.02) translate3d(0, 0, 0); }
+}
+@keyframes slide-wipe {
+  from { clip-path: inset(0 0 0 100%); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+/* ===== Texto animado letra por letra (AnimatedTitle mode="chars") ===== */
+.word-chars {
+  display: inline-block;
+  white-space: nowrap;
+}
+.char {
+  display: inline-block;
+  animation: char-in 0.9s var(--ease-out-expo) calc(var(--intro-delay) + var(--d, 0s)) both;
+}
+.eyebrow-in {
+  animation: tracking-in 1.1s var(--ease-out-expo) calc(var(--intro-delay) + var(--d, 0s)) both;
+}
+
+/* ===== Títulos que se animan al entrar en pantalla (components/ui/InView) ===== */
+.inview {
+  --intro-delay: 0s;
+}
+.inview :is(.word > span, .char, .enter, .eyebrow-in) {
+  animation-play-state: paused;
+}
+.inview[data-visible] :is(.word > span, .char, .enter, .eyebrow-in) {
+  animation-play-state: running;
+}
+
+/* ===== Secciones sobre fotografía: texto claro en ambos temas ===== */
+.on-dark {
+  --fg: #ffffff;
+  --muted: rgb(255 255 255 / 0.82);
+  --line: rgb(255 255 255 / 0.24);
+  --surface: rgb(6 22 20 / 0.35);
+  --accent: #c6e94b;
+  --accent-soft: rgb(198 233 75 / 0.16);
+  --btn-bg: #c6e94b;
+  --btn-fg: #0a1f14;
+  color: var(--fg);
+}
+
+/* ===== Carrusel principal (components/home/HeroCarousel) ===== */
+.slide {
+  opacity: 0;
+  z-index: 0;
+}
+.slide[data-state="prev"] {
+  opacity: 1;
+  z-index: 1;
+}
+.slide[data-state="active"] {
+  opacity: 1;
+  z-index: 2;
+  animation: slide-wipe 1.2s cubic-bezier(0.77, 0, 0.18, 1) both;
+}
+.slide[data-first] {
+  animation: none;
+}
+.slide[data-state="prev"] .kenburns {
+  transform: scale(1.02);
+}
+.slide[data-state="active"] .kenburns {
+  animation: kenburns 9s cubic-bezier(0.25, 0.1, 0.25, 1) both;
+}
+.kenburns-once {
+  animation: kenburns 2.6s var(--ease-out-expo) var(--intro-delay) both;
+}
+.scroll-cue {
+  animation: scroll-cue 2s ease-in-out infinite;
+}
+@keyframes scroll-cue {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.hero-progress {
+  transform-origin: left;
+  animation: progress-fill var(--slide-ms, 7000ms) linear both;
+}
+.hero-paused .hero-progress {
+  animation-play-state: paused;
 }
 
 /* Foco de luz que sigue al cursor en tarjetas (components/ui/SpotlightCard). */
@@ -352,9 +483,9 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  :root:not([data-motion="force"]) *,
+  :root:not([data-motion="force"]) *::before,
+  :root:not([data-motion="force"]) *::after {
     animation-duration: 0.01ms !important;
     animation-delay: 0s !important;
     animation-iteration-count: 1 !important;

@@ -46,10 +46,11 @@ export const viewport: Viewport = {
 
 /**
  * Antes del primer pintado: aplica el tema guardado (o el del sistema) y
- * marca la bienvenida como vista si ya apareció en esta sesión.
- * Con ?temporada= la bienvenida siempre se muestra (vista previa).
+ * marca la bienvenida como vista si ya apareció en esta sesión o si el
+ * visitante pidió "reducir movimiento".
+ * Con ?intro o ?temporada= la bienvenida y las animaciones se fuerzan (vista previa).
  */
-const bootScript = `(function(){try{var r=document.documentElement,m=matchMedia("(prefers-color-scheme: dark)"),s=localStorage.getItem("vs-theme");r.dataset.theme=s==="dark"||(s!=="light"&&m.matches)?"dark":"light";m.addEventListener("change",function(e){if(!localStorage.getItem("vs-theme"))r.dataset.theme=e.matches?"dark":"light"});if(sessionStorage.getItem("vs-intro")&&location.search.indexOf("temporada=")<0)r.dataset.introSeen=""}catch(e){}})()`;
+const bootScript = `(function(){try{var r=document.documentElement,m=matchMedia("(prefers-color-scheme: dark)"),s=localStorage.getItem("vs-theme");r.dataset.theme=s==="dark"||(s!=="light"&&m.matches)?"dark":"light";m.addEventListener("change",function(e){if(!localStorage.getItem("vs-theme"))r.dataset.theme=e.matches?"dark":"light"});var q=location.search,force=q.indexOf("intro")>=0||q.indexOf("temporada=")>=0;if(force)r.dataset.motion="force";if(!force&&(sessionStorage.getItem("vs-intro")||matchMedia("(prefers-reduced-motion: reduce)").matches))r.dataset.introSeen=""}catch(e){}})()`;
 
 const jsonLd = {
   "@context": "https://schema.org",

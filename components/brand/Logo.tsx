@@ -11,7 +11,7 @@ export function Logo({ onClick, size = "md" }: Props) {
       <span className={`relative ${box} overflow-hidden rounded-2xl shadow-md ring-1 ring-line transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-3`}>
         <Image src={logo} alt="" fill sizes="44px" className="object-cover" />
       </span>
-      <span className="font-display text-xl font-semibold tracking-tight">
+      <span className="font-display text-lg font-semibold tracking-tight text-fg sm:text-xl">
         Vital<span className="text-accent">Salud</span>
       </span>
     </Link>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { prefersReducedMotion } from "@/lib/motion";
 import type { EffectKey } from "@/lib/seasons";
 import { useSeason } from "@/lib/useSeason";
 
@@ -34,7 +35,7 @@ export function SeasonalParticles({ className = "" }: { className?: string }) {
   useEffect(() => {
     const canvas = ref.current;
     if (!canvas || !effect) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (prefersReducedMotion()) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 

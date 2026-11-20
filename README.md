@@ -14,8 +14,9 @@ npx tsc --noEmit
 npm run build
 ```
 
-Para ver la bienvenida de otra temporada: `http://localhost:3000/?temporada=navidad`
-(claves en `lib/seasons.ts`).
+La bienvenida (la Tierra se acerca hasta Yanahuara) sale una vez por sesión y se omite si el
+dispositivo pide "reducir movimiento". Para verla siempre: `http://localhost:3000/?intro`.
+Partículas de otra temporada: `http://localhost:3000/?temporada=navidad` (claves en `lib/seasons.ts`).
 
 ## Estructura
 

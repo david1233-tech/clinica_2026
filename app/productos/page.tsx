@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { CheckCircle, ShoppingBag } from "@phosphor-icons/react/ssr";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { PageHeader } from "@/components/ui/PageHeader";
+import fachada from "@/public/hero-vital-salud.jpg";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { CATEGORY_LABELS, PRODUCTS, formatPrice } from "@/lib/data/products";
 import { whatsappLink } from "@/lib/site";
@@ -16,6 +17,7 @@ export default function ProductosPage() {
   return (
     <>
       <PageHeader
+        image={fachada} imageAlt="Tienda saludable del Centro Vital Salud" imagePosition="30% 45%"
         eyebrow="Productos"
         before="Lo mejor de la naturaleza, listo para"
         accent="tu día"
