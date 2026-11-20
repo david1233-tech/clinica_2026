@@ -1,0 +1,364 @@
+@import "tailwindcss";
+
+/* Modo oscuro controlado por data-theme en <html> (lo fija el script del layout). */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* =====================================================================
+   Tokens de marca. Claro = "Mañana en Yanahuara", oscuro = "Bosque de Noche".
+   Ambos salen de los colores del logo (turquesa, lima, verde, pizarra).
+   ===================================================================== */
+:root {
+  --bg: #f3f7ef;
+  --bg-soft: #e6efdf;
+  --surface: #ffffff;
+  --surface-2: #f8fbf5;
+  --fg: #0f3533;
+  --muted: #4e6b66;
+  --line: rgb(15 53 51 / 0.12);
+  --accent: #1a9480;
+  --accent-soft: rgb(26 148 128 / 0.12);
+  --highlight: #ffc23c;
+  --leaf: #9cc43a;
+  --btn-bg: #0f3533;
+  --btn-fg: #f3f7ef;
+  --glow: rgb(255 194 60 / 0.25);
+  --aurora-1: rgb(255 194 60 / 0.45);
+  --aurora-2: rgb(156 196 58 / 0.35);
+  --aurora-3: rgb(26 148 128 / 0.25);
+  --shadow: 0 30px 60px -30px rgb(15 53 51 / 0.35);
+  --intro-delay: 2.6s;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --bg: #061614;
+  --bg-soft: #0a211d;
+  --surface: #0d2723;
+  --surface-2: #0a1f1c;
+  --fg: #eaf6f1;
+  --muted: #9fc0b5;
+  --line: rgb(198 233 75 / 0.16);
+  --accent: #c6e94b;
+  --accent-soft: rgb(198 233 75 / 0.1);
+  --highlight: #2ec4a6;
+  --leaf: #2ec4a6;
+  --btn-bg: #c6e94b;
+  --btn-fg: #0a1f14;
+  --glow: rgb(198 233 75 / 0.16);
+  --aurora-1: rgb(46 196 166 / 0.55);
+  --aurora-2: rgb(198 233 75 / 0.35);
+  --aurora-3: rgb(29 85 96 / 0.6);
+  --shadow: 0 40px 90px -30px rgb(0 0 0 / 0.8);
+  color-scheme: dark;
+}
+
+/* La bienvenida ya se vio en esta sesión: las entradas arrancan sin espera. */
+:root[data-intro-seen] {
+  --intro-delay: 0s;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-highlight: var(--highlight);
+  --color-leaf: var(--leaf);
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--btn-fg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ============================ Componentes ============================ */
+@layer components {
+  .container-site {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 80rem;
+    padding-inline: max(1rem, env(safe-area-inset-left, 0px));
+  }
+  @media (min-width: 640px) {
+    .container-site {
+      padding-inline: 2rem;
+    }
+  }
+
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    overflow: hidden;
+    border-radius: 9999px;
+    padding: 0.95rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: transform 0.35s var(--ease-out-expo), box-shadow 0.35s, background-color 0.3s;
+  }
+  .btn:hover {
+    transform: translateY(-3px);
+  }
+  .btn::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 30%, rgb(255 255 255 / 0.45) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.7s;
+  }
+  .btn:hover::after {
+    transform: translateX(120%);
+  }
+  .btn-primary {
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    box-shadow: 0 16px 40px -14px var(--btn-bg);
+  }
+  .btn-ghost {
+    border: 1px solid var(--line);
+    background: color-mix(in srgb, var(--surface) 60%, transparent);
+    color: var(--fg);
+    backdrop-filter: blur(10px);
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .pulse-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: currentColor;
+    animation: ping-soft 2s infinite;
+  }
+
+  .card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 1.5rem;
+    background: var(--surface);
+  }
+
+  /* Palabra destacada: subrayado girasol (claro) o degradado lima-turquesa (oscuro). */
+  .accent-word {
+    font-style: italic;
+    color: var(--accent);
+    background: linear-gradient(rgb(255 194 60 / 0.6), rgb(255 194 60 / 0.6)) no-repeat 0 92% / 100% 30%;
+    animation: mark-in 0.9s cubic-bezier(0.65, 0, 0.35, 1) calc(var(--intro-delay) + 1.3s) both;
+  }
+  [data-theme="dark"] .accent-word {
+    background: linear-gradient(95deg, #c6e94b 10%, #2ec4a6 90%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: none;
+  }
+
+  .grain {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+}
+
+/* ============================ Animaciones ============================ */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes blur-in {
+  from { opacity: 0; filter: blur(12px); transform: translateY(10px); }
+  to { opacity: 1; filter: blur(0); transform: none; }
+}
+@keyframes drop-in {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.7); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes arch-reveal {
+  from { clip-path: inset(100% 0 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes zoom-out {
+  from { transform: scale(1.3); }
+  to { transform: none; }
+}
+@keyframes word-up {
+  from { transform: translateY(112%) rotate(6deg); }
+  to { transform: none; }
+}
+@keyframes mark-in {
+  from { background-size: 0% 30%; }
+  to { background-size: 100% 30%; }
+}
+@keyframes grow {
+  from { opacity: 0; transform: scale(0) rotate(-35deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes drift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-8%, 6%) scale(1.15); }
+  100% { transform: translate(6%, -5%) scale(0.95); }
+}
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+@keyframes ping-soft {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 60%, transparent); }
+  100% { box-shadow: 0 0 0 12px transparent; }
+}
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes curtain-up {
+  to { transform: translateY(-100%); visibility: hidden; }
+}
+@keyframes fade-out {
+  to { opacity: 0; visibility: hidden; }
+}
+
+/* Entradas: se aplican con `.enter` + variante, y `--d` como retardo propio. */
+.enter {
+  animation-duration: var(--dur, 0.9s);
+  animation-timing-function: var(--ease-out-expo);
+  animation-delay: calc(var(--intro-delay) + var(--d, 0s));
+  animation-fill-mode: both;
+}
+.enter-rise { animation-name: rise; }
+.enter-blur { animation-name: blur-in; }
+.enter-drop { animation-name: drop-in; }
+.enter-scale { animation-name: scale-in; }
+.enter-arch { animation-name: arch-reveal; }
+.enter-zoom { animation-name: zoom-out; }
+
+.word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0 0.06em 0.12em 0;
+  margin-bottom: -0.12em;
+}
+.word > span {
+  display: inline-block;
+  animation: word-up 1s var(--ease-out-expo) calc(var(--intro-delay) + var(--d, 0s)) both;
+}
+
+.leaf-grow {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: grow 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0s) both;
+}
+.trunk-draw {
+  stroke-dasharray: 1;
+  animation: draw 0.9s ease-out 0.2s both;
+}
+
+.aurora > i {
+  position: absolute;
+  border-radius: 9999px;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+
+.marquee-track {
+  animation: marquee 32s linear infinite;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Transición suave al cambiar de página (app/template.tsx). */
+.page-enter {
+  animation: page-in 0.7s var(--ease-out-expo) both;
+}
+
+/* Aparición al hacer scroll, sin JavaScript. Sin soporte, el contenido se ve igual. */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 40%;
+  }
+}
+
+/* Bienvenida: se oculta antes del primer pintado si ya se vio en la sesión. */
+:root[data-intro-seen] .site-intro {
+  display: none;
+}
+.site-intro {
+  animation: curtain-up 0.9s cubic-bezier(0.76, 0, 0.24, 1) 2.4s forwards;
+}
+.site-intro.is-skipped {
+  pointer-events: none;
+  animation: fade-out 0.35s ease forwards;
+}
+
+/* Foco de luz que sigue al cursor en tarjetas (components/ui/SpotlightCard). */
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(280px circle at var(--x, 50%) var(--y, 0%), var(--glow), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
