@@ -124,7 +124,7 @@ export default function NosotrosPage() {
 
       {/* Arequipa */}
       <section className="container-site mt-28">
-        <figure className="reveal relative isolate overflow-hidden rounded-[2.5rem]">
+        <figure className="reveal-img relative isolate overflow-hidden rounded-[2.5rem]">
           <Image src={panoramica} alt="Plaza de Armas de Arequipa al atardecer" placeholder="blur" sizes="100vw" className="h-[26rem] w-full object-cover sm:h-[32rem]" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
           <figcaption className="absolute bottom-0 left-0 flex max-w-2xl flex-col gap-3 p-8 text-white sm:p-12">

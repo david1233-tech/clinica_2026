@@ -4,19 +4,23 @@ import { useEffect, useRef, type CSSProperties } from "react";
 import Image from "next/image";
 import type { GeoPermissibleObjects } from "d3-geo";
 import type { GeometryCollection, Topology } from "topojson-specification";
-import panoramica from "@/public/panoramica-arequipa.jpg";
+import fachada from "@/public/local/fachada.jpg";
+import interior from "@/public/local/interior-tienda.jpg";
 
 /** Yanahuara, Arequipa. */
 const TARGET: [number, number] = [-71.541, -16.389];
 const START_ROTATION: [number, number] = [-15, -18];
 const END_ROTATION: [number, number] = [-TARGET[0], -TARGET[1]];
 
-/* Línea de tiempo (ms). Debe coincidir con los retardos CSS de .site-intro.is-playing */
-const ROTATE = [400, 2600] as const;
-const ZOOM = [1900, 4100] as const;
-/* Hasta donde el mapa (escala 1:110m) se ve nítido: el Perú completo en pantalla. */
+/** Centro de la puerta de la tienda en la foto de la fachada (proporción del ancho/alto). */
+const DOOR = { x: 0.467, y: 0.75 };
+const FACADE_POS_X = 0.47;
+
+/* Línea de tiempo del globo (ms). Las fases con fotos están en globals.css (.site-intro). */
+const ROTATE = [300, 2000] as const;
+const ZOOM = [1200, 2900] as const;
 const MAX_ZOOM = 6.5;
-const TOTAL = 6600;
+const GLOBE_END = 3600;
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 const progress = (t: number, [a, b]: readonly [number, number]) => clamp01((t - a) / (b - a));
@@ -27,9 +31,11 @@ const lerp = (a: number, b: number, p: number) => a + (b - a) * p;
 type Atlas = Topology<{ land: GeometryCollection; countries: GeometryCollection }>;
 
 /**
- * Bienvenida cinematográfica: la Tierra gira y se acerca hasta Yanahuara,
- * Arequipa; luego se funde con la foto de la ciudad y una cortina revela el
- * sitio. Una vez por sesión, se puede saltar, y se omite con "reducir movimiento".
+ * Bienvenida cinematográfica en tres actos:
+ * 1) la Tierra gira y se acerca hasta Yanahuara, Arequipa;
+ * 2) aterriza en la fachada de la tienda y la cámara entra por la puerta;
+ * 3) dentro de la tienda aparece la marca y una cortina revela el sitio.
+ * Una vez por sesión, se puede saltar y se omite con "reducir movimiento".
  */
 export function SiteIntro() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -46,6 +52,20 @@ export function SiteIntro() {
     let cancelled = false;
     let finished = false;
 
+    // Punto de fuga del "travelling": la puerta, calculada para object-fit: cover.
+    const aimAtDoor = () => {
+      const W = root.clientWidth;
+      const H = root.clientHeight;
+      const s = Math.max(W / fachada.width, H / fachada.height);
+      const dw = fachada.width * s;
+      const dh = fachada.height * s;
+      const ox = (W - dw) * FACADE_POS_X;
+      const oy = (H - dh) / 2;
+      root.style.setProperty("--door-x", `${ox + DOOR.x * dw}px`);
+      root.style.setProperty("--door-y", `${oy + DOOR.y * dh}px`);
+    };
+    aimAtDoor();
+
     const finish = () => {
       if (finished) return;
       finished = true;
@@ -55,7 +75,6 @@ export function SiteIntro() {
         sessionStorage.setItem("vs-intro", "1");
       } catch {}
     };
-
     const skip = () => {
       html.style.setProperty("--intro-delay", "0s");
       root.classList.add("is-skipped");
@@ -95,17 +114,12 @@ export function SiteIntro() {
           canvas.width = W * dpr;
           canvas.height = H * dpr;
           ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          aimAtDoor();
         };
         resize();
         window.addEventListener("resize", resize);
 
-        const stars = Array.from({ length: 220 }, () => ({
-          x: Math.random(),
-          y: Math.random(),
-          r: Math.random() * 1.2 + 0.2,
-          p: Math.random() * Math.PI * 2,
-        }));
-
+        const stars = Array.from({ length: 220 }, () => ({ x: Math.random(), y: Math.random(), r: Math.random() * 1.2 + 0.2, p: Math.random() * Math.PI * 2 }));
         const projection = d3.geoOrthographic().clipAngle(90).precision(0.4);
         const path = d3.geoPath(projection, ctx);
         const start = performance.now();
@@ -115,7 +129,7 @@ export function SiteIntro() {
           const t = now - start;
           const base = Math.min(W, H) * (W < 640 ? 0.42 : 0.34);
           const zoomP = easeInOut(progress(t, ZOOM));
-          const k = base * (0.6 + 0.4 * easeOut(progress(t, [0, 1100]))) * Math.exp(Math.log(MAX_ZOOM) * zoomP);
+          const k = base * (0.6 + 0.4 * easeOut(progress(t, [0, 900]))) * Math.exp(Math.log(MAX_ZOOM) * zoomP);
           const rotP = easeInOut(progress(t, ROTATE));
           const idle = (1 - rotP) * t * 0.004;
           projection
@@ -125,7 +139,6 @@ export function SiteIntro() {
 
           ctx.clearRect(0, 0, W, H);
 
-          // Estrellas: se desvanecen al acercarnos
           const starAlpha = 1 - zoomP;
           if (starAlpha > 0.01) {
             ctx.fillStyle = "#ffffff";
@@ -138,7 +151,6 @@ export function SiteIntro() {
             ctx.globalAlpha = 1;
           }
 
-          // Atmósfera
           const glow = ctx.createRadialGradient(W / 2, H / 2, k * 0.92, W / 2, H / 2, k * 1.22);
           glow.addColorStop(0, "rgba(46,196,166,0.45)");
           glow.addColorStop(1, "rgba(46,196,166,0)");
@@ -147,7 +159,6 @@ export function SiteIntro() {
           ctx.arc(W / 2, H / 2, k * 1.22, 0, Math.PI * 2);
           ctx.fill();
 
-          // Océano
           const ocean = ctx.createRadialGradient(W / 2 - k * 0.35, H / 2 - k * 0.35, k * 0.1, W / 2, H / 2, k);
           ocean.addColorStop(0, "#0f4a47");
           ocean.addColorStop(1, "#03100f");
@@ -156,14 +167,12 @@ export function SiteIntro() {
           ctx.fillStyle = ocean;
           ctx.fill();
 
-          // Retícula
           ctx.beginPath();
           path(graticule);
           ctx.strokeStyle = "rgba(198,233,75,0.09)";
           ctx.lineWidth = 0.6;
           ctx.stroke();
 
-          // Continentes
           ctx.beginPath();
           path(land);
           ctx.fillStyle = "#1f7466";
@@ -178,8 +187,7 @@ export function SiteIntro() {
           ctx.lineWidth = 0.5;
           ctx.stroke();
 
-          // Perú resaltado
-          const peruA = progress(t, [2300, 3200]);
+          const peruA = progress(t, [1700, 2400]);
           if (peru && peruA > 0) {
             ctx.beginPath();
             path(peru);
@@ -190,7 +198,6 @@ export function SiteIntro() {
             ctx.stroke();
           }
 
-          // Brillo de luz solar
           const shine = ctx.createRadialGradient(W / 2 - k * 0.5, H / 2 - k * 0.6, 0, W / 2 - k * 0.5, H / 2 - k * 0.6, k * 1.3);
           shine.addColorStop(0, "rgba(255,255,255,0.10)");
           shine.addColorStop(1, "rgba(255,255,255,0)");
@@ -199,13 +206,12 @@ export function SiteIntro() {
           ctx.fillStyle = shine;
           ctx.fill();
 
-          // Marcador en Yanahuara
-          const pinA = progress(t, [2700, 3200]);
+          const pinA = progress(t, [2100, 2500]);
           const pt = projection(TARGET);
           if (pt && pinA > 0) {
             const [px, py] = pt;
             for (let i = 0; i < 3; i++) {
-              const ring = ((t / 1500 + i / 3) % 1);
+              const ring = (t / 1500 + i / 3) % 1;
               ctx.beginPath();
               ctx.arc(px, py, 6 + ring * 46, 0, Math.PI * 2);
               ctx.strokeStyle = `rgba(198,233,75,${(1 - ring) * 0.8 * pinA})`;
@@ -226,7 +232,7 @@ export function SiteIntro() {
             ctx.globalAlpha = 1;
           }
 
-          if (t < TOTAL && !finished) raf = requestAnimationFrame(frame);
+          if (t < GLOBE_END && !finished) raf = requestAnimationFrame(frame);
           else window.removeEventListener("resize", resize);
         };
         raf = requestAnimationFrame(frame);
@@ -245,34 +251,46 @@ export function SiteIntro() {
     };
   }, []);
 
-  const title = "Arequipa";
+  const brand = "Vital Salud";
 
   return (
     <div ref={rootRef} className="site-intro fixed inset-0 z-[100] overflow-hidden bg-[#020a0a] text-white" role="presentation">
       <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,#0a2a27_0%,#020a0a_65%)]" />
       <canvas ref={canvasRef} aria-hidden="true" className="absolute inset-0 h-full w-full" />
 
-      <div aria-hidden="true" className="intro-photo absolute inset-0 opacity-0">
-        <Image src={panoramica} alt="" fill preload sizes="100vw" className="object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/40" />
+      {/* Acto 2: aterrizaje en la fachada y travelling hacia la puerta */}
+      <div aria-hidden="true" className="intro-facade absolute inset-0">
+        <div className="intro-dolly absolute inset-0">
+          <Image src={fachada} alt="" fill preload sizes="100vw" quality={90} className="object-cover" style={{ objectPosition: `${FACADE_POS_X * 100}% 50%` }} />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/35" />
+        </div>
+        <p className="intro-landing absolute inset-x-0 top-[18%] text-center text-[0.7rem] font-bold uppercase tracking-[0.4em] text-white drop-shadow-[0_2px_12px_rgba(0,0,0,.6)] sm:text-xs">
+          Av. Víctor Andrés Belaúnde 367 · Yanahuara
+        </p>
       </div>
 
-      {/* Datos tipo HUD */}
-      <div aria-hidden="true" className="intro-hud pointer-events-none absolute inset-x-0 top-0 flex justify-between p-5 font-mono text-[0.65rem] tracking-[0.25em] text-white/70 sm:p-8 sm:text-xs">
+      {/* Acto 3: dentro de la tienda */}
+      <div aria-hidden="true" className="intro-inside absolute inset-0">
+        <Image src={interior} alt="" fill sizes="100vw" className="object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/30" />
+      </div>
+      <div aria-hidden="true" className="intro-flash pointer-events-none absolute inset-0 bg-white" />
+
+      <div aria-hidden="true" className="intro-hud pointer-events-none absolute inset-x-0 top-0 flex justify-between p-5 font-mono text-[0.65rem] tracking-[0.25em] text-white/75 sm:p-8 sm:text-xs">
         <span>CENTRO VITAL SALUD</span>
         <span>16°23′S · 71°32′W</span>
       </div>
 
       <div className="pointer-events-none absolute inset-x-0 bottom-[16%] flex flex-col items-center gap-4 px-6 text-center">
-        <p className="intro-eyebrow text-[0.7rem] font-bold uppercase tracking-[0.4em] text-[#c6e94b] sm:text-xs">Yanahuara · Perú</p>
-        <p className="font-display text-[clamp(3.5rem,13vw,10rem)] font-light leading-none tracking-tight" aria-label={title}>
-          {title.split("").map((ch, i) => (
-            <span key={i} aria-hidden="true" className="intro-letter inline-block" style={{ "--i": i } as CSSProperties}>
+        <p className="intro-eyebrow text-[0.7rem] font-bold uppercase tracking-[0.4em] text-[#c6e94b] sm:text-xs">Bienvenido a</p>
+        <p className="font-display text-[clamp(3.2rem,12vw,9.5rem)] font-light leading-none tracking-tight" aria-label={brand}>
+          {brand.split("").map((ch, i) => (
+            <span key={i} aria-hidden="true" className="intro-letter inline-block whitespace-pre" style={{ "--i": i } as CSSProperties}>
               {ch}
             </span>
           ))}
         </p>
-        <p className="intro-slogan max-w-md text-base text-white/85 sm:text-lg">Centro Vital Salud · Tu salud, en manos naturales</p>
+        <p className="intro-slogan max-w-md text-base text-white/85 sm:text-lg">Cuidando para prevenir · Tu salud, en manos naturales</p>
       </div>
 
       <button

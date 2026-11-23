@@ -10,8 +10,9 @@ import { prefersReducedMotion } from "@/lib/motion";
 import { SITE } from "@/lib/site";
 import directoraFachada from "@/public/hero-vital-salud-movil.jpg";
 import fachada from "@/public/hero-vital-salud.jpg";
-import panoramica from "@/public/panoramica-arequipa.jpg";
-import patio from "@/public/salonnn-vital.jpg";
+import interiorTienda from "@/public/local/interior-tienda.jpg";
+import patio from "@/public/local/patio-descanso.jpg";
+import salaTalleres from "@/public/local/sala-talleres.jpg";
 
 type Slide = {
   label: string;
@@ -27,14 +28,14 @@ type Slide = {
 
 const SLIDES: Slide[] = [
   {
-    label: "Arequipa",
-    image: panoramica,
-    alt: "Plaza de Armas de Arequipa al atardecer",
-    position: "50% 55%",
-    eyebrow: "Yanahuara · Arequipa",
+    label: "Tienda saludable",
+    image: interiorTienda,
+    alt: "Interior de la tienda saludable del Centro Vital Salud",
+    position: "50% 58%",
+    eyebrow: "Tienda saludable · Yanahuara",
     before: "Tu salud, en manos",
     accent: "naturales",
-    text: "Medicina naturista, nutrición clínica, psicología y terapias en el corazón de la Ciudad Blanca.",
+    text: "Medicina naturista, nutrición clínica, psicología, terapias y productos naturales seleccionados por especialistas.",
   },
   {
     label: "Nuestro centro",
@@ -50,12 +51,22 @@ const SLIDES: Slide[] = [
   {
     label: "Espacios",
     image: patio,
-    alt: "Patio de descanso del centro con plantas y sillones",
-    position: "50% 60%",
-    eyebrow: "Nuestros espacios",
+    alt: "Patio de descanso del centro con plantas colgantes y sillones",
+    position: "50% 62%",
+    eyebrow: "Patio de descanso",
     before: "Un refugio verde para tu",
     accent: "bienestar",
-    text: `Patio de descanso, sala de terapias y tienda saludable en ${SITE.address}.`,
+    text: `Un espacio tranquilo para esperar tu consulta o descansar después de tu terapia, en ${SITE.address}.`,
+  },
+  {
+    label: "Talleres",
+    image: salaTalleres,
+    alt: "Sala de talleres y diplomados del centro",
+    position: "50% 55%",
+    eyebrow: "Sala de talleres",
+    before: "Aprende a cuidarte con",
+    accent: "expertos",
+    text: "Diplomados y talleres de medicina natural, nutrición clínica, jugoterapia y gastronomía vegetariana.",
   },
 ];
 

@@ -3,7 +3,7 @@ import { ArrowUpRight, ChatCircleText, Clock, MapPin, Phone } from "@phosphor-ic
 import { SocialIcon } from "@/components/brand/SocialIcon";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { PageHeader } from "@/components/ui/PageHeader";
-import panoramica from "@/public/panoramica-arequipa.jpg";
+import fachada from "@/public/local/fachada.jpg";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { SITE, SOCIAL_LINKS } from "@/lib/site";
 
@@ -17,7 +17,7 @@ export default function ContactoPage() {
   return (
     <>
       <PageHeader
-        image={panoramica} imageAlt="Plaza de Armas de Arequipa al atardecer" imagePosition="50% 60%"
+        image={fachada} imageAlt="Fachada del Centro Vital Salud en Yanahuara" imagePosition="47% 50%"
         eyebrow="Contacto"
         before="Estamos para"
         accent="ayudarte"

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { CheckCircle, WhatsappLogo } from "@phosphor-icons/react/ssr";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { PageHeader } from "@/components/ui/PageHeader";
-import patio from "@/public/salonnn-vital.jpg";
+import patio from "@/public/local/patio-descanso.jpg";
 import { ServiceIcon } from "@/components/ui/ServiceIcon";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { SERVICES } from "@/lib/data/services";
@@ -18,7 +18,7 @@ export default function ServiciosPage() {
   return (
     <>
       <PageHeader
-        image={patio} imageAlt="Patio de descanso del Centro Vital Salud" imagePosition="50% 60%"
+        image={patio} imageAlt="Patio de descanso del Centro Vital Salud" imagePosition="50% 65%"
         eyebrow="Servicios"
         before="Tratamientos pensados para tu"
         accent="bienestar"

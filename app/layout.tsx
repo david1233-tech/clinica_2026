@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import { CursorFollower } from "@/components/effects/CursorFollower";
+import { SmoothScroll } from "@/components/effects/SmoothScroll";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteIntro } from "@/components/layout/SiteIntro";
@@ -32,7 +34,7 @@ export const metadata: Metadata = {
     siteName: SITE.name,
     title: `${SITE.name} | ${SITE.slogan}`,
     description: SITE.description,
-    images: [{ url: "/hero-vital-salud.jpg", alt: "Fachada del Centro Vital Salud en Yanahuara" }],
+    images: [{ url: "/local/fachada.jpg", alt: "Fachada del Centro Vital Salud en Yanahuara" }],
   },
   alternates: { canonical: "/" },
 };
@@ -59,7 +61,7 @@ const jsonLd = {
   slogan: SITE.slogan,
   description: SITE.description,
   url: siteUrl(),
-  image: `${siteUrl()}/hero-vital-salud.jpg`,
+  image: `${siteUrl()}/local/fachada.jpg`,
   telephone: "+51976371809",
   address: {
     "@type": "PostalAddress",
@@ -88,6 +90,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <a href="#contenido" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200] focus:rounded-full focus:bg-surface focus:px-4 focus:py-2">
           Saltar al contenido
         </a>
+        <SmoothScroll />
+        <CursorFollower />
         <SiteIntro />
         <SiteHeader />
         <main id="contenido" className="flex-1">
