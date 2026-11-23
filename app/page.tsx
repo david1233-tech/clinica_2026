@@ -13,7 +13,7 @@ import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { SERVICES, SPECIALTIES } from "@/lib/data/services";
 import salonCharlas from "@/public/interior-terapias.jpg";
 import fachada from "@/public/local/fachada.jpg";
-import zonaEspera from "@/public/salonnn-vital.jpg";
+import patio from "@/public/local/patio-descanso.jpg";
 
 const BOOKS = [
   { year: "2009", title: "Sabor de Vida Sana" },
@@ -29,13 +29,13 @@ const STATS = [
   { to: 3, label: "libros publicados" },
   { to: 8, suffix: "+", label: "países como conferencista" },
   { to: 2009, from: 1990, label: "primer libro publicado" },
-  { to: 6, label: "días de atención a la semana" },
+  { to: 5, label: "días de atención a la semana" },
 ];
 
 /* Fotos que no aparecen en el carrusel: cada imagen se usa en un solo lugar del sitio. */
 const SPACES = [
   { image: fachada, title: "Nuestra fachada", text: "Av. Víctor Andrés Belaúnde 367, Yanahuara. Te esperamos con la puerta abierta.", position: "47% 50%" },
-  { image: zonaEspera, title: "Zona de espera", text: "Sillones, plantas y luz natural para esperar tu consulta con calma.", position: "40% 60%" },
+  { image: patio, title: "Patio de descanso", text: "Plantas colgantes, sillones y luz natural para esperar tu consulta con calma.", position: "50% 70%" },
   { image: salonCharlas, title: "Salón de charlas", text: "Donde dictamos charlas y diplomados sobre alimentación y vida saludable.", position: "50% 60%" },
 ];
 

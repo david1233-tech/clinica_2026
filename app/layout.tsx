@@ -73,9 +73,9 @@ const jsonLd = {
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
       opens: "09:00",
-      closes: "19:00",
+      closes: "18:00",
     },
   ],
   sameAs: SOCIAL_LINKS.filter((s) => s.name !== "WhatsApp").map((s) => s.href),

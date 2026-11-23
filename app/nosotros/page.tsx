@@ -7,7 +7,7 @@ import { InView } from "@/components/ui/InView";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import directora from "@/public/dra-directora.jpg";
-import panoramica from "@/public/panoramica-arequipa.jpg";
+import salaCharlas from "@/public/local/sala-talleres.jpg";
 
 export const metadata: Metadata = {
   title: "Nosotros",
@@ -29,7 +29,7 @@ export default function NosotrosPage() {
   return (
     <>
       <PageHeader
-        image={panoramica} imageAlt="Plaza de Armas de Arequipa al atardecer" imagePosition="50% 60%"
+        image={salaCharlas} imageAlt="Salón de charlas del Centro Vital Salud con el logo en la pared" imagePosition="50% 45%"
         eyebrow="Nosotros"
         before="Cuidamos a las familias de Arequipa de forma"
         accent="natural"

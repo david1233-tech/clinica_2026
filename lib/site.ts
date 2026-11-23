@@ -24,8 +24,7 @@ export const SITE = {
   landline: "(054) 692940",
   landlineHref: "tel:+5154692940",
   hours: [
-    { days: "Lunes a sábado", time: "9:00 a 19:00" },
-    { days: "Domingos", time: "Previa cita" },
+    { days: "Lunes a viernes", time: "9:00 a. m. a 6:00 p. m." },
   ],
   whatsappUrl: whatsappLink("Hola, quisiera reservar una cita en Centro Vital Salud."),
   /** Tienda en línea (sitio externo de biller.pe). Se abre en una pestaña nueva para no perder esta web. */

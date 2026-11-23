@@ -5,6 +5,7 @@ import { ContactForm } from "@/components/contact/ContactForm";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { SITE, SOCIAL_LINKS } from "@/lib/site";
+import panoramica from "@/public/panoramica-arequipa.jpg";
 
 export const metadata: Metadata = {
   title: "Contacto",
@@ -16,6 +17,9 @@ export default function ContactoPage() {
   return (
     <>
       <PageHeader
+        image={panoramica}
+        imageAlt="Plaza de Armas de Arequipa al atardecer"
+        imagePosition="50% 60%"
         eyebrow="Contacto"
         before="Estamos para"
         accent="ayudarte"

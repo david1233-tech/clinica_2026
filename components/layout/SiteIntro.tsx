@@ -17,7 +17,7 @@ const LEAVES = [
 ];
 
 /* Línea de tiempo (s). Debe coincidir con globals.css (.site-intro). */
-const T = { leaves: 1.75, exit: 4.4, done: 5.8 };
+const T = { leaves: 2.6, exit: 6.3, done: 8.4 };
 
 /**
  * Bienvenida "De la semilla al árbol":
@@ -49,6 +49,8 @@ export function SiteIntro() {
       try {
         sessionStorage.setItem("vs-intro", "1");
       } catch {}
+      // Al navegar después de la bienvenida, los textos ya no esperan los ~7 s de la intro.
+      window.setTimeout(() => html.style.setProperty("--intro-delay", "0.7s"), 2500);
     };
     const skip = () => {
       html.style.setProperty("--intro-delay", "0s");
@@ -116,7 +118,7 @@ export function SiteIntro() {
       if (t > T.leaves && t < T.exit && motes.length < 340) {
         for (let i = 0; i < 6; i++) motes.push(spawn(cx, cy - treeR * 0.35, treeR * 1.3));
       }
-      const warp = t > T.exit ? Math.min(1, (t - T.exit) / 0.5) : 0;
+      const warp = t > T.exit ? Math.min(1, (t - T.exit) / 0.9) : 0;
 
       ctx.clearRect(0, 0, W, H);
       ctx.globalCompositeOperation = "lighter";
@@ -137,8 +139,8 @@ export function SiteIntro() {
           const ax = m.x - cx;
           const ay = m.y - cy;
           const len = Math.hypot(ax, ay) || 1;
-          m.vx += (ax / len) * warp * 1.6;
-          m.vy += (ay / len) * warp * 1.6;
+          m.vx += (ax / len) * warp * 1.1;
+          m.vy += (ay / len) * warp * 1.1;
         }
         m.vx *= 0.985;
         m.vy *= 0.985;

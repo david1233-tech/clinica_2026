@@ -10,8 +10,7 @@ import { prefersReducedMotion } from "@/lib/motion";
 import { SITE } from "@/lib/site";
 import directoraFachada from "@/public/hero-vital-salud.jpg";
 import interiorTienda from "@/public/local/interior-tienda.jpg";
-import patio from "@/public/local/patio-descanso.jpg";
-import salaTalleres from "@/public/local/sala-talleres.jpg";
+import espacios from "@/public/salonnn-vital.jpg";
 
 type Slide = {
   label: string;
@@ -50,23 +49,14 @@ const SLIDES: Slide[] = [
   },
   {
     label: "Espacios",
-    image: patio,
-    alt: "Patio de descanso del centro con plantas colgantes y sillones",
-    position: "50% 62%",
-    eyebrow: "Patio de descanso",
+    image: espacios,
+    alt: "Espacio de descanso del centro con sillones, plantas y luz natural",
+    position: "50% 55%",
+    positionMobile: "35% 55%",
+    eyebrow: "Nuestros espacios",
     before: "Un refugio verde para tu",
     accent: "bienestar",
     text: `Un espacio tranquilo para esperar tu consulta o descansar después de tu terapia, en ${SITE.address}.`,
-  },
-  {
-    label: "Talleres",
-    image: salaTalleres,
-    alt: "Sala de talleres y diplomados del centro",
-    position: "50% 55%",
-    eyebrow: "Sala de talleres",
-    before: "Aprende a cuidarte con",
-    accent: "expertos",
-    text: "Diplomados y talleres de medicina natural, nutrición clínica, jugoterapia y gastronomía vegetariana.",
   },
 ];
 

@@ -1,63 +1,38 @@
-import type { Product, ProductCategory } from "@/lib/types";
+/**
+ * Categorías de referencia de la tienda. Los productos, precios y stock reales
+ * viven en la tienda en línea (SITE.storeUrl); aquí solo se describe qué encontrar.
+ */
+export type CategoryIcon = "leaf" | "pill" | "grains" | "baby" | "drop" | "orange";
 
-export const CATEGORY_LABELS: Record<ProductCategory, string> = {
-  "medicina-naturista": "Medicina naturista",
-  nutricion: "Nutrición",
-  bienestar: "Bienestar",
-  complementos: "Complementos",
-};
-
-export const PRODUCTS: Product[] = [
+export const STORE_CATEGORIES: { title: string; text: string; icon: CategoryIcon }[] = [
   {
-    id: "decoction-medicina-natural",
-    name: "Decoction Medicina Natural",
-    description:
-      "Preparación tradicional con extractos herbales para depuración y fortalecimiento inmunológico.",
-    price: 250,
-    category: "medicina-naturista",
-    tags: ["depuración", "inmunidad", "herbal"],
-    features: [
-      "Extracto de hierbas seleccionadas",
-      "Sistema de extracción tradicional",
-      "Validado por especialistas",
-    ],
+    title: "Medicina naturista",
+    text: "Preparados herbales y extractos para depurar y fortalecer tu organismo.",
+    icon: "leaf",
   },
   {
-    id: "kit-nutricion-integral",
-    name: "Kit Nutrición Integral",
-    description:
-      "Combinación de suplementos naturales para nutrición completa y revitalización celular.",
-    price: 380,
-    category: "nutricion",
-    tags: ["nutrición", "suplementos", "bienestar"],
-    features: ["Complejo vitamínico", "Omega-3 concentrado", "Extracto de maca"],
+    title: "Suplementos y vitaminas",
+    text: "Complejos vitamínicos y suplementos naturales para tu energía diaria.",
+    icon: "pill",
   },
   {
-    id: "suplemento-vitaminas-naturales",
-    name: "Suplemento Vitaminas Naturales",
-    description:
-      "Complemento con vitaminas de origen natural para soporte inmune y energía.",
-    price: 95,
-    category: "complementos",
-    tags: ["vitaminas", "inmunidad", "energía"],
-    features: ["Complejo multivitamínico", "Sin conservantes", "Uso diario"],
+    title: "Alimentos saludables",
+    text: "Granolas, snacks integrales y opciones para una alimentación más sana.",
+    icon: "grains",
   },
   {
-    id: "jarabe-natural-infantil",
-    name: "Jarabe Natural Cuidado Infantil",
-    description:
-      "Jarabe con hierbas naturales para el cuidado diario del sistema inmune en niños.",
-    price: 85,
-    category: "nutricion",
-    tags: ["infantil", "inmunidad", "herbal"],
-    features: ["Sabor frutal", "Sin azúcares añadidos", "Validado para uso infantil"],
+    title: "Bebidas naturales",
+    text: "Preparados y bebidas refrigeradas listas para llevar.",
+    icon: "orange",
+  },
+  {
+    title: "Cuidado personal",
+    text: "Productos naturales para el cuidado de tu piel y tu cabello.",
+    icon: "drop",
+  },
+  {
+    title: "Cuidado infantil",
+    text: "Productos naturales pensados para los más pequeños de la casa.",
+    icon: "baby",
   },
 ];
-
-const priceFormatter = new Intl.NumberFormat("es-PE", {
-  style: "currency",
-  currency: "PEN",
-  maximumFractionDigits: 0,
-});
-
-export const formatPrice = (value: number) => priceFormatter.format(value);

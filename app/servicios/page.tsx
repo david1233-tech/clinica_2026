@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { CheckCircle, WhatsappLogo } from "@phosphor-icons/react/ssr";
+import { ServicesCarousel } from "@/components/services/ServicesCarousel";
+import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
 import { CtaBand } from "@/components/ui/CtaBand";
-import { PageHeader } from "@/components/ui/PageHeader";
+import { InView } from "@/components/ui/InView";
 import { ServiceIcon } from "@/components/ui/ServiceIcon";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { SERVICES } from "@/lib/data/services";
@@ -16,13 +18,23 @@ export const metadata: Metadata = {
 export default function ServiciosPage() {
   return (
     <>
-      <PageHeader
-        eyebrow="Servicios"
-        before="Tratamientos pensados para tu"
-        accent="bienestar"
-        after="integral"
-        description="Terapias naturales respaldadas por especialistas comprometidos con tu recuperación física y emocional."
-      />
+      <ServicesCarousel />
+
+      <InView className="container-site mb-10 flex flex-col gap-4">
+        <span className="eyebrow eyebrow-in">Todos los servicios</span>
+        <AnimatedTitle
+          as="h2"
+          mode="chars"
+          before="Tratamientos pensados para tu"
+          accent="bienestar"
+          after="integral"
+          start={0.1}
+          className="max-w-3xl font-display text-[clamp(2.2rem,5vw,3.6rem)] font-light leading-[1.02] tracking-tight text-balance"
+        />
+        <p className="enter enter-rise max-w-2xl text-muted" style={{ "--d": "0.7s" } as React.CSSProperties}>
+          Terapias naturales respaldadas por especialistas comprometidos con tu recuperación física y emocional.
+        </p>
+      </InView>
 
       <section className="container-site grid gap-4 md:grid-cols-2">
         {SERVICES.map((s, i) => (
