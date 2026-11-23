@@ -14,7 +14,7 @@ npx tsc --noEmit
 npm run build
 ```
 
-La bienvenida (la Tierra se acerca hasta Yanahuara) sale una vez por sesión y se omite si el
+La bienvenida (una semilla de luz se convierte en el árbol del logo y un portal con forma de hoja revela la página) sale una vez por sesión y se omite si el
 dispositivo pide "reducir movimiento". Para verla siempre: `http://localhost:3000/?intro`.
 Partículas de otra temporada: `http://localhost:3000/?temporada=navidad` (claves en `lib/seasons.ts`).
 

@@ -26,7 +26,7 @@
   --aurora-2: rgb(156 196 58 / 0.35);
   --aurora-3: rgb(26 148 128 / 0.25);
   --shadow: 0 30px 60px -30px rgb(15 53 51 / 0.35);
-  --intro-delay: 7.5s;
+  --intro-delay: 4.8s;
   color-scheme: light;
 }
 
@@ -325,73 +325,120 @@ body {
   }
 }
 
-/* ===== Bienvenida "desde el espacio" (components/layout/SiteIntro) =====
-   Se oculta antes del primer pintado si ya se vio en la sesión. Si el JS no
-   carga, la cortina sube sola a los 8 s para no bloquear la página. */
+/* ===== Bienvenida "De la semilla al árbol" (components/layout/SiteIntro) =====
+   Se oculta antes del primer pintado si ya se vio en la sesión.
+   Línea de tiempo (s): 0.2 semilla · 0.6 ondas · 1.15 tronco · 1.75 hojas y polen
+   2.4 "Vital Salud" · 3.1 lema · 0–4.4 contador · 4.4 vuelo + portal con forma de hoja · 5.75 fin.
+   Si algo falla, el portal se abre igual por CSS y la página nunca queda bloqueada. */
+@property --count {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
 :root[data-intro-seen] .site-intro {
   display: none;
 }
 .site-intro {
-  animation: curtain-up 1s cubic-bezier(0.76, 0, 0.24, 1) 10s forwards;
-}
-.site-intro.is-playing {
-  animation-delay: 7.3s;
+  --leaf-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path transform='rotate(32 50 50)' d='M50 4C78 26 78 74 50 96C22 74 22 26 50 4Z'/></svg>");
+  -webkit-mask-image: var(--leaf-mask), linear-gradient(#000 0 0);
+  -webkit-mask-position: 50% 38%, 0 0;
+  -webkit-mask-size: auto 0%, 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-composite: xor;
+  mask-image: var(--leaf-mask), linear-gradient(#000 0 0);
+  mask-position: 50% 38%, 0 0;
+  mask-size: auto 0%, 100% 100%;
+  mask-repeat: no-repeat;
+  mask-composite: exclude;
+  animation: intro-portal 1.35s cubic-bezier(0.7, 0, 0.15, 1) 4.45s both;
 }
 .site-intro.is-skipped {
   pointer-events: none;
   animation: fade-out 0.35s ease forwards;
 }
-
-/* Línea de tiempo (s):
-   0.0–3.0 globo · 2.7 aterriza en la fachada · 4.1 travelling hacia la puerta
-   5.0 destello · 5.1 interior de la tienda · 5.7 "Bienvenido a Vital Salud" · 7.3 cortina.
-   Cada pieza espera pausada hasta que el globo arranca (.is-playing). */
-.intro-hud { animation: fade-in 1s ease 0.3s both paused; }
-.intro-facade { animation: intro-land 1.3s cubic-bezier(0.22, 1, 0.36, 1) 2.7s both paused; }
-.intro-landing { animation: landing-label 2.1s ease 3.1s both paused; }
-.intro-dolly {
-  transform-origin: var(--door-x, 47%) var(--door-y, 75%);
-  animation: dolly 1.7s cubic-bezier(0.7, 0, 0.2, 1) 4.1s both paused;
+.intro-glow {
+  background:
+    radial-gradient(ellipse at 50% 38%, rgb(46 196 166 / 0.22), transparent 55%),
+    radial-gradient(ellipse at 50% 120%, rgb(198 233 75 / 0.14), transparent 50%);
+  animation: fade-in 1.6s ease 0.1s both;
 }
-.intro-flash { animation: flash 0.9s ease 5s both paused; }
-.intro-inside { animation: inside 1.6s var(--ease-out-expo) 5.1s both paused; }
-.intro-eyebrow { animation: tracking-in 1.1s var(--ease-out-expo) 5.7s both paused; }
-.intro-letter {
-  animation: char-in 1s var(--ease-out-expo) calc(5.8s + var(--i) * 0.05s) both paused;
+.intro-chrome { animation: fade-in 1s ease 0.3s both; }
+.intro-seed {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: seed 1.6s ease-out 0.2s both;
 }
-.intro-slogan { animation: rise 0.9s var(--ease-out-expo) 6.5s both paused; }
-.intro-progress { animation: progress-fill 7.3s linear both paused; }
-.is-playing :is(.intro-hud, .intro-facade, .intro-landing, .intro-dolly, .intro-flash, .intro-inside, .intro-eyebrow, .intro-letter, .intro-slogan, .intro-progress) {
-  animation-play-state: running;
+.intro-ripple {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ripple 1.8s cubic-bezier(0.2, 0.7, 0.3, 1) calc(0.6s + var(--i) * 0.28s) both;
 }
+.intro-trunk {
+  stroke-dasharray: 1;
+  animation: draw 1s cubic-bezier(0.65, 0, 0.35, 1) 1.15s both;
+}
+.intro-leaf {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: grow 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) calc(1.75s + var(--i) * 0.08s) both;
+}
+.intro-float { animation: intro-float 3s ease-in-out 2.6s infinite alternate; }
+.intro-letter { animation: char-in 1s var(--ease-out-expo) calc(2.4s + var(--i) * 0.045s) both; }
+.intro-tagline { animation: tracking-in 1.2s var(--ease-out-expo) 3.1s both; }
+.intro-counter {
+  counter-reset: n var(--count);
+  animation: count 4.3s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.intro-counter::after { content: counter(n, decimal-leading-zero); }
+.intro-progress { animation: progress-fill 4.4s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.intro-stage {
+  transform-origin: 50% 38%;
+  animation: stage-out 1.2s cubic-bezier(0.7, 0, 0.2, 1) 4.4s forwards;
+}
+.intro-burst { animation: burst 1.1s cubic-bezier(0.2, 0.7, 0.3, 1) 4.4s both; }
 
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-@keyframes intro-land {
-  from { opacity: 0; transform: scale(1.7); filter: blur(14px); }
-  to { opacity: 1; transform: scale(1); filter: blur(0); }
+@keyframes seed {
+  0% { opacity: 0; transform: scale(0); }
+  20% { opacity: 1; transform: scale(1.25); }
+  40% { transform: scale(0.85); }
+  60% { transform: scale(1.12); }
+  80% { opacity: 1; transform: scale(0.95); }
+  100% { opacity: 0; transform: scale(0.4); }
 }
-@keyframes landing-label {
-  0% { opacity: 0; transform: translateY(12px); letter-spacing: 0.8em; }
-  25% { opacity: 1; transform: none; }
-  75% { opacity: 1; }
-  100% { opacity: 0; transform: translateY(-8px); }
+@keyframes ripple {
+  from { opacity: 0.9; transform: scale(0.2); }
+  to { opacity: 0; transform: scale(7); }
 }
-@keyframes dolly {
-  from { transform: scale(1); filter: blur(0); }
-  70% { filter: blur(0); }
-  to { transform: scale(6.5); filter: blur(5px); }
+@keyframes intro-float {
+  to { transform: translateY(-8px); }
 }
-@keyframes flash {
-  0% { opacity: 0; }
-  35% { opacity: 0.5; }
-  100% { opacity: 0; }
+@keyframes count {
+  to { --count: 100; }
 }
-@keyframes inside {
-  from { opacity: 0; transform: scale(1.9); }
-  to { opacity: 1; transform: scale(1.04); }
+@keyframes stage-out {
+  to { opacity: 0; transform: scale(2.6); filter: blur(14px); }
+}
+@keyframes burst {
+  0% { opacity: 0; transform: scale(0); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: scale(7); }
+}
+@keyframes intro-portal {
+  0% {
+    -webkit-mask-size: auto 0%, 100% 100%;
+    mask-size: auto 0%, 100% 100%;
+  }
+  88% { opacity: 1; }
+  100% {
+    -webkit-mask-size: auto 2800%, 100% 100%;
+    mask-size: auto 2800%, 100% 100%;
+    opacity: 0;
+    visibility: hidden;
+  }
 }
 @keyframes char-in {
   from { opacity: 0; transform: translateY(0.45em) rotate(8deg); filter: blur(8px); }
