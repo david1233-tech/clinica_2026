@@ -1,6 +1,9 @@
 import type { CSSProperties } from "react";
 import Image, { type StaticImageData } from "next/image";
+import { LogoTree } from "@/components/brand/LogoTree";
+import { SeasonalParticles } from "@/components/effects/SeasonalParticles";
 import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
+import { Aurora } from "@/components/ui/Aurora";
 
 type Props = {
   eyebrow: string;
@@ -8,20 +11,35 @@ type Props = {
   accent?: string;
   after?: string;
   description: string;
-  image: StaticImageData;
-  imageAlt: string;
+  /** Sin foto, la portada usa auroras, partículas y el árbol del logo (así ninguna imagen se repite). */
+  image?: StaticImageData;
+  imageAlt?: string;
   imagePosition?: string;
 };
 
-/** Portada a pantalla completa de las páginas internas, con foto y titular animado letra por letra. */
-export function PageHeader({ eyebrow, before, accent, after, description, image, imageAlt, imagePosition = "50% 50%" }: Props) {
+/** Portada a pantalla completa de las páginas internas, con titular animado letra por letra. */
+export function PageHeader({ eyebrow, before, accent, after, description, image, imageAlt = "", imagePosition = "50% 50%" }: Props) {
   return (
     <section className="on-dark relative isolate mb-16 flex min-h-[78svh] items-end overflow-hidden bg-[#061614] pb-16 pt-36 sm:mb-24 sm:min-h-[86svh] sm:pb-20">
-      <div className="kenburns-once absolute inset-0 -z-10">
-        <Image src={image} alt={imageAlt} fill preload placeholder="blur" sizes="100vw" className="object-cover" style={{ objectPosition: imagePosition }} />
-      </div>
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-r from-black/80 via-black/45 to-black/10" />
-      <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-t from-black/85 via-black/10 to-black/50" />
+      {image ? (
+        <>
+          <div className="kenburns-once absolute inset-0 -z-10">
+            <Image src={image} alt={imageAlt} fill preload placeholder="blur" sizes="100vw" className="object-cover" style={{ objectPosition: imagePosition }} />
+          </div>
+          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-r from-black/80 via-black/45 to-black/10" />
+          <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-t from-black/85 via-black/10 to-black/50" />
+        </>
+      ) : (
+        <>
+          <Aurora className="opacity-90" />
+          <SeasonalParticles className="-z-10" />
+          <LogoTree
+            animated
+            startDelay={0.6}
+            className="pointer-events-none absolute -right-10 bottom-0 -z-10 h-[70%] w-auto text-white/25 opacity-30 sm:right-[4%] sm:opacity-40"
+          />
+        </>
+      )}
       <div className="grain" />
       <div className="container-site relative flex flex-col items-start gap-6">
         <span className="eyebrow eyebrow-in" style={{ "--d": "0.25s" } as CSSProperties}>

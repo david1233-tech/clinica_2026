@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { BookOpen, Eye, GlobeHemisphereWest, GraduationCap, Target } from "@phosphor-icons/react/ssr";
+import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
 import { CtaBand } from "@/components/ui/CtaBand";
+import { InView } from "@/components/ui/InView";
 import { PageHeader } from "@/components/ui/PageHeader";
-import directoraFachada from "@/public/hero-vital-salud-movil.jpg";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import directora from "@/public/dra-directora.jpg";
 import panoramica from "@/public/panoramica-arequipa.jpg";
@@ -28,7 +29,7 @@ export default function NosotrosPage() {
   return (
     <>
       <PageHeader
-        image={directoraFachada} imageAlt="Directora del Centro Vital Salud frente al local" imagePosition="50% 28%"
+        image={panoramica} imageAlt="Plaza de Armas de Arequipa al atardecer" imagePosition="50% 60%"
         eyebrow="Nosotros"
         before="Cuidamos a las familias de Arequipa de forma"
         accent="natural"
@@ -122,17 +123,21 @@ export default function NosotrosPage() {
         ))}
       </section>
 
-      {/* Arequipa */}
-      <section className="container-site mt-28">
-        <figure className="reveal-img relative isolate overflow-hidden rounded-[2.5rem]">
-          <Image src={panoramica} alt="Plaza de Armas de Arequipa al atardecer" placeholder="blur" sizes="100vw" className="h-[26rem] w-full object-cover sm:h-[32rem]" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-          <figcaption className="absolute bottom-0 left-0 flex max-w-2xl flex-col gap-3 p-8 text-white sm:p-12">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#c6e94b]">Desde la Ciudad Blanca</span>
-            <p className="font-display text-3xl leading-tight sm:text-5xl">Orgullosamente arequipeños, al servicio de tu salud.</p>
-          </figcaption>
-        </figure>
-      </section>
+      {/* Arequipa: declaración tipográfica */}
+      <InView className="container-site mt-28">
+        <div className="relative isolate overflow-hidden rounded-[2.5rem] border border-line bg-surface px-6 py-16 sm:px-14 sm:py-20">
+          <div aria-hidden="true" className="absolute -left-20 -top-24 -z-10 h-80 w-80 rounded-full blur-3xl" style={{ background: "radial-gradient(circle, var(--aurora-2), transparent 65%)" }} />
+          <span className="eyebrow eyebrow-in">Desde la Ciudad Blanca</span>
+          <AnimatedTitle
+            as="p"
+            mode="chars"
+            before="Orgullosamente arequipeños, al servicio de tu"
+            accent="salud"
+            start={0.15}
+            className="mt-5 max-w-4xl font-display text-[clamp(2.2rem,5vw,4rem)] font-light leading-[1.05] tracking-tight text-balance"
+          />
+        </div>
+      </InView>
 
       <CtaBand />
     </>

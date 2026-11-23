@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "@phosphor-icons/react/ssr";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
@@ -12,11 +11,17 @@ import { Marquee } from "@/components/ui/Marquee";
 import { ServiceIcon } from "@/components/ui/ServiceIcon";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { SERVICES, SPECIALTIES } from "@/lib/data/services";
-import directora from "@/public/dra-directora.jpg";
+import salonCharlas from "@/public/interior-terapias.jpg";
 import fachada from "@/public/local/fachada.jpg";
-import interiorTienda from "@/public/local/interior-tienda.jpg";
-import patio from "@/public/local/patio-descanso.jpg";
-import salaTalleres from "@/public/local/sala-talleres.jpg";
+import zonaEspera from "@/public/salonnn-vital.jpg";
+
+const BOOKS = [
+  { year: "2009", title: "Sabor de Vida Sana" },
+  { year: "2010", title: "La salud está en tus manos" },
+  { year: "2012", title: "Sabor que Salva Vidas" },
+];
+
+const COUNTRIES = ["Estados Unidos", "México", "República Dominicana", "Colombia", "Brasil", "Chile", "Bolivia", "Uruguay"];
 
 const d = (s: number) => ({ "--d": `${s}s` }) as CSSProperties;
 
@@ -27,11 +32,11 @@ const STATS = [
   { to: 6, label: "días de atención a la semana" },
 ];
 
+/* Fotos que no aparecen en el carrusel: cada imagen se usa en un solo lugar del sitio. */
 const SPACES = [
   { image: fachada, title: "Nuestra fachada", text: "Av. Víctor Andrés Belaúnde 367, Yanahuara. Te esperamos con la puerta abierta.", position: "47% 50%" },
-  { image: interiorTienda, title: "Tienda saludable", text: "Suplementos, alimentos naturales y productos seleccionados por especialistas.", position: "50% 60%" },
-  { image: patio, title: "Patio de descanso", text: "Un rincón verde para esperar tu consulta o relajarte después de tu terapia.", position: "50% 70%" },
-  { image: salaTalleres, title: "Sala de talleres", text: "Donde compartimos diplomados de nutrición, jugoterapia y gastronomía vegetariana.", position: "50% 55%" },
+  { image: zonaEspera, title: "Zona de espera", text: "Sillones, plantas y luz natural para esperar tu consulta con calma.", position: "40% 60%" },
+  { image: salonCharlas, title: "Salón de charlas", text: "Donde dictamos charlas y diplomados sobre alimentación y vida saludable.", position: "50% 60%" },
 ];
 
 const headingClass = "font-display text-[clamp(2.2rem,5vw,3.6rem)] font-light leading-[1.02] tracking-tight text-balance";
@@ -88,12 +93,27 @@ export default function HomePage() {
 
       {/* ============ DIRECTORA ============ */}
       <section className="container-site mt-28 grid items-center gap-12 lg:grid-cols-2">
-        <div className="relative mx-auto w-full max-w-md">
-          <div className="absolute inset-6 -z-10 rounded-full blur-3xl" style={{ background: "radial-gradient(circle, var(--aurora-1), transparent 70%)" }} />
-          <div className="reveal-img overflow-hidden rounded-[2.5rem] border border-line bg-white">
-            <Image src={directora} alt="Directora del Centro Vital Salud con bata blanca" placeholder="blur" sizes="(min-width: 1024px) 28rem, 90vw" className="h-auto w-full" />
+        <InView className="relative order-last lg:order-none">
+          <div aria-hidden="true" className="absolute inset-10 -z-10 rounded-full blur-3xl" style={{ background: "radial-gradient(circle, var(--aurora-1), transparent 70%)" }} />
+          <div className="card flex flex-col gap-6 p-8 sm:p-10">
+            <span className="eyebrow">Obras publicadas</span>
+            <ol className="flex flex-col divide-y divide-line">
+              {BOOKS.map((b, i) => (
+                <li key={b.year} className="enter enter-rise flex items-baseline gap-5 py-4" style={d(0.15 + i * 0.12)}>
+                  <span className="font-display text-sm text-muted tabular-nums">{b.year}</span>
+                  <span className="font-display text-2xl leading-snug sm:text-3xl">{b.title}</span>
+                </li>
+              ))}
+            </ol>
+            <div className="enter enter-rise flex flex-wrap gap-2" style={d(0.6)}>
+              {COUNTRIES.map((c) => (
+                <span key={c} className="rounded-full border border-line px-3 py-1 text-xs font-semibold">
+                  {c}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
+        </InView>
         <InView className="flex flex-col gap-6">
           <span className="eyebrow eyebrow-in">Quién te atiende</span>
           <AnimatedTitle as="h2" mode="chars" before="Más de una década enseñando a" accent="prevenir" start={0.1} className={headingClass} />

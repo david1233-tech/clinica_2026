@@ -3,7 +3,7 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalendarCheck, FacebookLogo, TiktokLogo, WhatsappLogo } from "@phosphor-icons/react";
+import { CalendarCheck, FacebookLogo, Storefront, TiktokLogo, WhatsappLogo } from "@phosphor-icons/react";
 import { Logo } from "@/components/brand/Logo";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { NAV_LINKS, SITE, SOCIAL_LINKS } from "@/lib/site";
@@ -120,6 +120,11 @@ export function SiteHeader() {
           <a href={SITE.whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary w-full">
             <CalendarCheck size={18} weight="bold" aria-hidden="true" />
             Reservar cita por WhatsApp
+          </a>
+          <a href={SITE.storeUrl} target="_blank" rel="noopener noreferrer" className="btn btn-ghost w-full">
+            <Storefront size={18} weight="bold" aria-hidden="true" />
+            Tienda en línea
+            <span className="sr-only">(se abre en una pestaña nueva)</span>
           </a>
           <div className="flex items-center justify-center gap-3">
             {SOCIAL_LINKS.map((s) => {

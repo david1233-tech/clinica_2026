@@ -28,6 +28,8 @@ export const SITE = {
     { days: "Domingos", time: "Previa cita" },
   ],
   whatsappUrl: whatsappLink("Hola, quisiera reservar una cita en Centro Vital Salud."),
+  /** Tienda en línea (sitio externo de biller.pe). Se abre en una pestaña nueva para no perder esta web. */
+  storeUrl: "https://vitalsalud.biller.pe/ecommerce",
 } as const;
 
 export const SOCIAL_LINKS = [

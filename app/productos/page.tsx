@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { CheckCircle, ShoppingBag } from "@phosphor-icons/react/ssr";
 import { CtaBand } from "@/components/ui/CtaBand";
 import { PageHeader } from "@/components/ui/PageHeader";
-import interiorTienda from "@/public/local/interior-tienda.jpg";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
+import { StoreBanner } from "@/components/ui/StoreBanner";
 import { CATEGORY_LABELS, PRODUCTS, formatPrice } from "@/lib/data/products";
 import { whatsappLink } from "@/lib/site";
 
@@ -17,14 +17,17 @@ export default function ProductosPage() {
   return (
     <>
       <PageHeader
-        image={interiorTienda} imageAlt="Interior de la tienda saludable del Centro Vital Salud" imagePosition="50% 60%"
         eyebrow="Productos"
         before="Lo mejor de la naturaleza, listo para"
         accent="tu día"
-        description="Productos seleccionados por nuestros especialistas. Elige el tuyo y te lo separamos por WhatsApp."
+        description="Productos seleccionados por nuestros especialistas. Cómpralos en nuestra tienda en línea o pídelos por WhatsApp."
       />
 
       <section className="container-site flex flex-col gap-8">
+        <StoreBanner />
+        <h2 className="mt-6 font-display text-3xl tracking-tight sm:text-4xl">
+          Algunos de nuestros <em className="text-accent">productos</em>
+        </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {PRODUCTS.map((p) => (
             <SpotlightCard key={p.id} className="reveal flex flex-col gap-5 p-6">

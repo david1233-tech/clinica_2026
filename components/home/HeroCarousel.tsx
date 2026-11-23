@@ -8,8 +8,7 @@ import { SeasonalParticles } from "@/components/effects/SeasonalParticles";
 import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
 import { prefersReducedMotion } from "@/lib/motion";
 import { SITE } from "@/lib/site";
-import directoraFachada from "@/public/hero-vital-salud-movil.jpg";
-import fachada from "@/public/hero-vital-salud.jpg";
+import directoraFachada from "@/public/hero-vital-salud.jpg";
 import interiorTienda from "@/public/local/interior-tienda.jpg";
 import patio from "@/public/local/patio-descanso.jpg";
 import salaTalleres from "@/public/local/sala-talleres.jpg";
@@ -17,9 +16,10 @@ import salaTalleres from "@/public/local/sala-talleres.jpg";
 type Slide = {
   label: string;
   image: StaticImageData;
-  imageMobile?: StaticImageData;
   alt: string;
+  /** Encuadre en escritorio y en celular (en vertical se recorta más). */
   position: string;
+  positionMobile?: string;
   eyebrow: string;
   before: string;
   accent: string;
@@ -28,25 +28,25 @@ type Slide = {
 
 const SLIDES: Slide[] = [
   {
+    label: "Nuestro centro",
+    image: directoraFachada,
+    alt: "Directora del Centro Vital Salud frente a la fachada de la tienda saludable",
+    position: "68% 40%",
+    positionMobile: "76% 50%",
+    eyebrow: "Nuestro centro · Yanahuara",
+    before: "Tu salud, en manos",
+    accent: "naturales",
+    text: "Medicina naturista, nutrición clínica y psicología con una especialista que lleva más de una década enseñando a prevenir.",
+  },
+  {
     label: "Tienda saludable",
     image: interiorTienda,
     alt: "Interior de la tienda saludable del Centro Vital Salud",
     position: "50% 58%",
-    eyebrow: "Tienda saludable · Yanahuara",
-    before: "Tu salud, en manos",
-    accent: "naturales",
-    text: "Medicina naturista, nutrición clínica, psicología, terapias y productos naturales seleccionados por especialistas.",
-  },
-  {
-    label: "Nuestro centro",
-    image: fachada,
-    imageMobile: directoraFachada,
-    alt: "Directora del Centro Vital Salud frente a la tienda saludable",
-    position: "68% 40%",
-    eyebrow: "Cuidando para prevenir",
-    before: "Medicina natural con respaldo",
-    accent: "profesional",
-    text: "Una especialista con más de una década enseñando a prevenir, autora de tres libros y conferencista internacional.",
+    eyebrow: "Tienda saludable",
+    before: "Todo lo natural para tu",
+    accent: "familia",
+    text: "Suplementos, alimentos saludables y productos naturales seleccionados por nuestros especialistas.",
   },
   {
     label: "Espacios",
@@ -153,12 +153,9 @@ export function HeroCarousel() {
               placeholder="blur"
               quality={i === 0 ? 90 : 75}
               sizes="100vw"
-              className={`object-cover ${s.imageMobile ? "hidden sm:block" : ""}`}
-              style={{ objectPosition: s.position }}
+              className="object-cover object-[var(--pos-m)] sm:object-[var(--pos)]"
+              style={{ "--pos": s.position, "--pos-m": s.positionMobile ?? s.position } as CSSProperties}
             />
-            {s.imageMobile && (
-              <Image src={s.imageMobile} alt={s.alt} fill placeholder="blur" sizes="100vw" className="object-cover object-[50%_25%] sm:hidden" />
-            )}
           </div>
         </div>
       ))}

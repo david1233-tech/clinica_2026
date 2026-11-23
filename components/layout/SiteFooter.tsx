@@ -45,6 +45,11 @@ export function SiteFooter() {
                 </Link>
               </li>
             ))}
+            <li>
+              <a href={SITE.storeUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-accent transition-opacity hover:opacity-80">
+                Tienda en línea ↗<span className="sr-only"> (se abre en una pestaña nueva)</span>
+              </a>
+            </li>
           </ul>
         </nav>
 
