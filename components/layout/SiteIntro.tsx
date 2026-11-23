@@ -17,7 +17,7 @@ const LEAVES = [
 ];
 
 /* Línea de tiempo (s). Debe coincidir con globals.css (.site-intro). */
-const T = { leaves: 2.6, exit: 6.3, done: 8.4 };
+const T = { leaves: 1.8, exit: 4.9, done: 6.6 };
 
 /**
  * Bienvenida "De la semilla al árbol":
@@ -118,7 +118,7 @@ export function SiteIntro() {
       if (t > T.leaves && t < T.exit && motes.length < 340) {
         for (let i = 0; i < 6; i++) motes.push(spawn(cx, cy - treeR * 0.35, treeR * 1.3));
       }
-      const warp = t > T.exit ? Math.min(1, (t - T.exit) / 0.9) : 0;
+      const warp = t > T.exit ? Math.min(1, (t - T.exit) / 0.7) : 0;
 
       ctx.clearRect(0, 0, W, H);
       ctx.globalCompositeOperation = "lighter";

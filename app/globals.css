@@ -26,7 +26,7 @@
   --aurora-2: rgb(156 196 58 / 0.35);
   --aurora-3: rgb(26 148 128 / 0.25);
   --shadow: 0 30px 60px -30px rgb(15 53 51 / 0.35);
-  --intro-delay: 7.1s;
+  --intro-delay: 5.5s;
   color-scheme: light;
 }
 
@@ -328,8 +328,8 @@ body {
 
 /* ===== Bienvenida "De la semilla al árbol" (components/layout/SiteIntro) =====
    Se oculta antes del primer pintado si ya se vio en la sesión.
-   Línea de tiempo (s): 0.3 semilla · 0.8 ondas · 1.8 tronco · 2.6 hojas y polen
-   3.6 "Vital Salud" · 4.6 lema · 0–6.3 contador · 6.3 vuelo + portal con forma de hoja · 8.3 fin.
+   Línea de tiempo (s): 0.15 semilla · 0.45 ondas · 0.85 tronco · 1.55–4.2 hojas que se despliegan y polen
+   3.0 "Vital Salud" · 3.75 lema · 0–4.9 contador · 4.9 vuelo + portal con forma de hoja · 6.45 fin.
    Si algo falla, el portal se abre igual por CSS y la página nunca queda bloqueada. */
 @property --count {
   syntax: "<integer>";
@@ -351,7 +351,7 @@ body {
   mask-size: auto 0%, 100% 100%;
   mask-repeat: no-repeat;
   mask-composite: exclude;
-  animation: intro-portal 1.9s cubic-bezier(0.65, 0, 0.3, 1) 6.4s both;
+  animation: intro-portal 1.5s cubic-bezier(0.65, 0, 0.3, 1) 4.95s both;
 }
 .site-intro.is-skipped {
   pointer-events: none;
@@ -361,42 +361,42 @@ body {
   background:
     radial-gradient(ellipse at 50% 38%, rgb(46 196 166 / 0.22), transparent 55%),
     radial-gradient(ellipse at 50% 120%, rgb(198 233 75 / 0.14), transparent 50%);
-  animation: fade-in 2.2s ease 0.1s both;
+  animation: fade-in 1.6s ease 0.1s both;
 }
-.intro-chrome { animation: fade-in 1.4s ease 0.4s both; }
+.intro-chrome { animation: fade-in 1.1s ease 0.3s both; }
 .intro-seed {
   transform-box: fill-box;
   transform-origin: center;
-  animation: seed 2.4s cubic-bezier(0.37, 0, 0.63, 1) 0.3s both;
+  animation: seed 1.7s cubic-bezier(0.37, 0, 0.63, 1) 0.15s both;
 }
 .intro-ripple {
   transform-box: fill-box;
   transform-origin: center;
-  animation: ripple 2.6s cubic-bezier(0.2, 0.7, 0.3, 1) calc(0.8s + var(--i) * 0.42s) both;
+  animation: ripple 2.1s cubic-bezier(0.2, 0.7, 0.3, 1) calc(0.45s + var(--i) * 0.3s) both;
 }
 .intro-trunk {
   stroke-dasharray: 1;
-  animation: draw 1.5s cubic-bezier(0.65, 0, 0.35, 1) 1.8s both;
+  animation: draw 1.7s cubic-bezier(0.45, 0, 0.2, 1) 0.85s both;
 }
 .intro-leaf {
   transform-box: fill-box;
   transform-origin: 50% 100%;
-  animation: grow 1.3s cubic-bezier(0.34, 1.4, 0.64, 1) calc(2.6s + var(--i) * 0.13s) both;
+  animation: leaf-unfold 1.5s cubic-bezier(0.22, 1, 0.36, 1) calc(1.55s + var(--i) * 0.17s) both;
 }
-.intro-float { animation: intro-float 3.2s ease-in-out 3.8s infinite alternate; }
-.intro-letter { animation: char-in 1.4s var(--ease-out-expo) calc(3.6s + var(--i) * 0.07s) both; }
-.intro-tagline { animation: tracking-in 1.6s var(--ease-out-expo) 4.6s both; }
+.intro-float { animation: intro-float 3s ease-in-out 3s infinite alternate; }
+.intro-letter { animation: char-in 1.2s var(--ease-out-expo) calc(3s + var(--i) * 0.05s) both; }
+.intro-tagline { animation: tracking-in 1.3s var(--ease-out-expo) 3.75s both; }
 .intro-counter {
   counter-reset: n var(--count);
-  animation: count 6.2s cubic-bezier(0.45, 0, 0.25, 1) both;
+  animation: count 4.8s cubic-bezier(0.45, 0, 0.25, 1) both;
 }
 .intro-counter::after { content: counter(n, decimal-leading-zero); }
-.intro-progress { animation: progress-fill 6.3s cubic-bezier(0.45, 0, 0.25, 1) both; }
+.intro-progress { animation: progress-fill 4.9s cubic-bezier(0.45, 0, 0.25, 1) both; }
 .intro-stage {
   transform-origin: 50% 38%;
-  animation: stage-out 1.8s cubic-bezier(0.55, 0, 0.25, 1) 6.3s forwards;
+  animation: stage-out 1.5s cubic-bezier(0.55, 0, 0.25, 1) 4.9s forwards;
 }
-.intro-burst { animation: burst 1.6s cubic-bezier(0.2, 0.7, 0.3, 1) 6.3s both; }
+.intro-burst { animation: burst 1.4s cubic-bezier(0.2, 0.7, 0.3, 1) 4.9s both; }
 
 @keyframes fade-in {
   from { opacity: 0; }
@@ -409,6 +409,11 @@ body {
   60% { transform: scale(1.12); }
   80% { opacity: 1; transform: scale(0.95); }
   100% { opacity: 0; transform: scale(0.4); }
+}
+@keyframes leaf-unfold {
+  0% { opacity: 0; transform: scale(0.05, 0) rotate(-28deg); }
+  35% { opacity: 1; }
+  100% { opacity: 1; transform: none; }
 }
 @keyframes ripple {
   from { opacity: 0.9; transform: scale(0.2); }
