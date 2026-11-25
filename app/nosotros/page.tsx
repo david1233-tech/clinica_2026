@@ -7,6 +7,7 @@ import { InView } from "@/components/ui/InView";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import directora from "@/public/dra-directora.jpg";
+import { BOOKS } from "@/lib/data/books";
 import charla from "@/public/local/charla.jpeg";
 import libros from "@/public/local/libros.jpeg";
 
@@ -15,12 +16,6 @@ export const metadata: Metadata = {
   description: "Conoce a la directora del Centro Vital Salud, su trayectoria en medicina natural y nuestra misión en Arequipa.",
   alternates: { canonical: "/nosotros" },
 };
-
-const BOOKS = [
-  { year: "2009", title: "Sabor de Vida Sana" },
-  { year: "2010", title: "La salud está en tus manos" },
-  { year: "2012", title: "Sabor que Salva Vidas" },
-];
 
 const COUNTRIES = ["Estados Unidos", "México", "República Dominicana", "Colombia", "Brasil", "Chile", "Bolivia", "Uruguay"];
 
@@ -36,7 +31,7 @@ export default function NosotrosPage() {
         eyebrow="Nosotros"
         before="Cuidamos a las familias de Arequipa de forma"
         accent="natural"
-        description="Somos un centro de medicina natural, nutrición clínica y bienestar integral en Yanahuara, dirigido por una especialista con más de una década enseñando a prevenir."
+        description="Somos un centro de medicina natural, nutrición clínica y bienestar integral en Yanahuara, dirigido por una especialista dedicada a enseñar a prevenir."
       />
 
       {/* Directora */}
@@ -65,10 +60,10 @@ export default function NosotrosPage() {
                 <BookOpen size={22} weight="duotone" aria-hidden="true" /> Autora publicada
               </span>
               <ol className="flex flex-col gap-3">
-                {BOOKS.map((b) => (
-                  <li key={b.year} className="flex items-baseline gap-3">
-                    <span className="font-display text-sm text-muted tabular-nums">{b.year}</span>
-                    <span className="font-display text-lg leading-snug">{b.title}</span>
+                {BOOKS.map((title, i) => (
+                  <li key={title} className="flex items-baseline gap-3">
+                    <span className="font-display text-sm text-muted tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="font-display text-lg leading-snug">{title}</span>
                   </li>
                 ))}
               </ol>

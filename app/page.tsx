@@ -14,12 +14,7 @@ import { SERVICES, SPECIALTIES } from "@/lib/data/services";
 import salonCharlas from "@/public/interior-terapias.jpg";
 import fachada from "@/public/local/fachada.jpg";
 import patio from "@/public/local/patio-descanso.jpg";
-
-const BOOKS = [
-  { year: "2009", title: "Sabor de Vida Sana" },
-  { year: "2010", title: "La salud está en tus manos" },
-  { year: "2012", title: "Sabor que Salva Vidas" },
-];
+import { BOOKS } from "@/lib/data/books";
 
 const COUNTRIES = ["Estados Unidos", "México", "República Dominicana", "Colombia", "Brasil", "Chile", "Bolivia", "Uruguay"];
 
@@ -28,7 +23,7 @@ const d = (s: number) => ({ "--d": `${s}s` }) as CSSProperties;
 const STATS = [
   { to: 3, label: "libros publicados" },
   { to: 8, suffix: "+", label: "países como conferencista" },
-  { to: 2009, from: 1990, label: "primer libro publicado" },
+  { to: 5, label: "especialidades que enseña en diplomados" },
   { to: 5, label: "días de atención a la semana" },
 ];
 
@@ -55,7 +50,7 @@ export default function HomePage() {
             <div key={s.label} className="enter enter-rise flex flex-col-reverse gap-2 bg-bg p-6 sm:p-8" style={d(0.1 + i * 0.1)}>
               <dt className="text-sm text-muted">{s.label}</dt>
               <dd className="font-display text-5xl font-light text-accent tabular-nums sm:text-6xl">
-                <CountUp to={s.to} from={s.from} suffix={s.suffix} />
+                <CountUp to={s.to} suffix={s.suffix} />
               </dd>
             </div>
           ))}
@@ -98,10 +93,10 @@ export default function HomePage() {
           <div className="card flex flex-col gap-6 p-8 sm:p-10">
             <span className="eyebrow">Obras publicadas</span>
             <ol className="flex flex-col divide-y divide-line">
-              {BOOKS.map((b, i) => (
-                <li key={b.year} className="enter enter-rise flex items-baseline gap-5 py-4" style={d(0.15 + i * 0.12)}>
-                  <span className="font-display text-sm text-muted tabular-nums">{b.year}</span>
-                  <span className="font-display text-2xl leading-snug sm:text-3xl">{b.title}</span>
+              {BOOKS.map((title, i) => (
+                <li key={title} className="enter enter-rise flex items-baseline gap-5 py-4" style={d(0.15 + i * 0.12)}>
+                  <span className="font-display text-sm text-muted tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="font-display text-2xl leading-snug sm:text-3xl">{title}</span>
                 </li>
               ))}
             </ol>
@@ -116,7 +111,7 @@ export default function HomePage() {
         </InView>
         <InView className="flex flex-col gap-6">
           <span className="eyebrow eyebrow-in">Quién te atiende</span>
-          <AnimatedTitle as="h2" mode="chars" before="Más de una década enseñando a" accent="prevenir" start={0.1} className={headingClass} />
+          <AnimatedTitle as="h2" mode="chars" before="Una especialista que enseña a" accent="prevenir" start={0.1} className={headingClass} />
           <p className="enter enter-rise leading-relaxed text-muted" style={d(0.8)}>
             Licenciada en Medicina Natural por la Universidad Pueblos de Europa y diplomada en Nutrición Clínica y Salud Humana por la
             Universidad Nacional de Trujillo. Promotora del programa «Vivir con Salud», autora de tres libros y conferencista en

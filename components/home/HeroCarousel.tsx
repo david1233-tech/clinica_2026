@@ -35,7 +35,7 @@ const SLIDES: Slide[] = [
     eyebrow: "Nuestro centro · Yanahuara",
     before: "Tu salud, en manos",
     accent: "naturales",
-    text: "Medicina naturista, nutrición clínica y psicología con una especialista que lleva más de una década enseñando a prevenir.",
+    text: "Medicina naturista, nutrición clínica y psicología con una especialista dedicada a enseñar a prevenir.",
   },
   {
     label: "Tienda saludable",
