@@ -8,6 +8,7 @@ import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { StoreBanner } from "@/components/ui/StoreBanner";
 import { STORE_CATEGORIES, type CategoryIcon } from "@/lib/data/products";
 import { SITE } from "@/lib/site";
+import portada from "@/public/local/productos.png";
 
 export const metadata: Metadata = {
   title: "Productos naturales",
@@ -21,6 +22,9 @@ export default function ProductosPage() {
   return (
     <>
       <PageHeader
+        image={portada}
+        imageAlt="Mano tomando una bolsa de almendras naturales de un estante de la tienda"
+        imagePosition="60% 50%"
         eyebrow="Productos"
         before="Lo mejor de la naturaleza, listo para"
         accent="tu día"

@@ -12,7 +12,7 @@ import { whatsappLink } from "@/lib/site";
 import medicina from "@/public/local/servicio-medicina-naturista.png";
 import nutricion from "@/public/local/servicio-nutricion.png";
 import psicologia from "@/public/local/servicio-psicologia.png";
-import terapias from "@/public/local/servicio-terapias.jpeg";
+import terapias from "@/public/local/servicio-terapias.png";
 
 /**
  * Foto de referencia de cada servicio. El texto va a la izquierda, así que se encuadra
@@ -22,7 +22,7 @@ const PHOTOS: Record<string, { image: StaticImageData; alt: string; position: st
   "medicina-naturista": { image: medicina, alt: "Hierbas medicinales, flores secas y mortero sobre una mesa de madera", position: "50% 50%", positionMobile: "70% 50%" },
   "nutricion-clinica": { image: nutricion, alt: "Nutricionista con una naranja y una pesa junto a un bowl de frutas y verduras", position: "70% 30%", positionMobile: "80% 30%" },
   psicologia: { image: psicologia, alt: "Especialista conversando con una paciente en consulta", position: "50% 30%", positionMobile: "25% 30%", flip: true },
-  "terapias-de-bienestar": { image: terapias, alt: "Paciente relajada recibiendo una terapia de bienestar", position: "60% 50%", positionMobile: "55% 50%" },
+  "terapias-de-bienestar": { image: terapias, alt: "Paciente relajada recibiendo una terapia de bienestar", position: "62% 45%", positionMobile: "50% 40%" },
 };
 
 /** Luz de color propia de cada servicio, sobre la foto. */
