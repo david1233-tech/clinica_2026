@@ -7,7 +7,8 @@ import { InView } from "@/components/ui/InView";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import directora from "@/public/dra-directora.jpg";
-import salaCharlas from "@/public/local/sala-talleres.jpg";
+import charla from "@/public/local/charla.jpeg";
+import libros from "@/public/local/libros.jpeg";
 
 export const metadata: Metadata = {
   title: "Nosotros",
@@ -29,7 +30,9 @@ export default function NosotrosPage() {
   return (
     <>
       <PageHeader
-        image={salaCharlas} imageAlt="Salón de charlas del Centro Vital Salud con el logo en la pared" imagePosition="50% 45%"
+        image={charla}
+        imageAlt="La directora del Centro Vital Salud dictando una charla de salud ante un auditorio lleno"
+        imagePosition="66% 35%"
         eyebrow="Nosotros"
         before="Cuidamos a las familias de Arequipa de forma"
         accent="natural"
@@ -97,6 +100,34 @@ export default function NosotrosPage() {
             </ul>
           </SpotlightCard>
         </div>
+      </section>
+
+      {/* Libros publicados */}
+      <section className="container-site mt-28 grid items-center gap-10 lg:grid-cols-[1.25fr_0.75fr]">
+        <figure className="reveal-img relative overflow-hidden rounded-[2.5rem] border border-line shadow-[var(--shadow)]">
+          <Image
+            src={libros}
+            alt="Libros publicados: Panadería Saludable, Dieta Saludable y Sabor que Salva Vidas"
+            placeholder="blur"
+            sizes="(min-width: 1024px) 60vw, 100vw"
+            className="h-auto w-full"
+          />
+        </figure>
+        <InView className="flex flex-col gap-5">
+          <span className="eyebrow eyebrow-in">Autora publicada</span>
+          <AnimatedTitle
+            as="h2"
+            mode="chars"
+            before="Libros para comer sano y"
+            accent="prevenir"
+            start={0.1}
+            className="font-display text-[clamp(2.2rem,4.5vw,3.4rem)] font-light leading-[1.05] tracking-tight text-balance"
+          />
+          <p className="enter enter-rise leading-relaxed text-muted" style={{ "--d": "0.7s" } as React.CSSProperties}>
+            Recetas nutritivas, panadería saludable y consejos para prevenir y tratar enfermedades de forma natural, escritos por nuestra
+            directora para que lleves la prevención a tu mesa.
+          </p>
+        </InView>
       </section>
 
       {/* Misión y visión */}
