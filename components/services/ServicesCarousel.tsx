@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
+import Image, { type StaticImageData } from "next/image";
 import { ArrowDown, CaretLeft, CaretRight, WhatsappLogo } from "@phosphor-icons/react";
 import { SeasonalParticles } from "@/components/effects/SeasonalParticles";
 import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
@@ -8,8 +9,23 @@ import { ServiceIcon } from "@/components/ui/ServiceIcon";
 import { SERVICES } from "@/lib/data/services";
 import { prefersReducedMotion } from "@/lib/motion";
 import { whatsappLink } from "@/lib/site";
+import medicina from "@/public/local/servicio-medicina-naturista.png";
+import nutricion from "@/public/local/servicio-nutricion.png";
+import psicologia from "@/public/local/servicio-psicologia.png";
+import terapias from "@/public/local/servicio-terapias.jpeg";
 
-/** Fondo propio de cada servicio (dos luces sobre verde noche). */
+/**
+ * Foto de referencia de cada servicio. El texto va a la izquierda, así que se encuadra
+ * (o se refleja) para que las personas queden a la derecha en escritorio.
+ */
+const PHOTOS: Record<string, { image: StaticImageData; alt: string; position: string; positionMobile?: string; flip?: boolean }> = {
+  "medicina-naturista": { image: medicina, alt: "Hierbas medicinales, flores secas y mortero sobre una mesa de madera", position: "50% 50%", positionMobile: "70% 50%" },
+  "nutricion-clinica": { image: nutricion, alt: "Nutricionista con una naranja y una pesa junto a un bowl de frutas y verduras", position: "70% 30%", positionMobile: "80% 30%" },
+  psicologia: { image: psicologia, alt: "Especialista conversando con una paciente en consulta", position: "50% 30%", positionMobile: "25% 30%", flip: true },
+  "terapias-de-bienestar": { image: terapias, alt: "Paciente relajada recibiendo una terapia de bienestar", position: "60% 50%", positionMobile: "55% 50%" },
+};
+
+/** Luz de color propia de cada servicio, sobre la foto. */
 const MOODS = [
   { a: "rgb(46 196 166 / 0.55)", b: "rgb(198 233 75 / 0.35)" },
   { a: "rgb(255 194 60 / 0.45)", b: "rgb(156 196 58 / 0.4)" },
@@ -74,40 +90,56 @@ export function ServicesCarousel() {
     >
       <h1 className="sr-only">Servicios del Centro Vital Salud</h1>
 
-      {/* Fondos de color de cada servicio */}
-      {SERVICES.map((svc, i) => (
-        <div
-          key={svc.slug}
-          aria-hidden="true"
-          className="slide absolute inset-0 overflow-hidden bg-[#061614]"
-          data-state={i === index ? "active" : i === prev ? "prev" : undefined}
-          data-first={i === 0 && cycle === 0 ? "" : undefined}
-        >
-          <div className="kenburns absolute inset-0">
-            <div className="absolute -left-[10%] -top-[20%] h-[80%] w-[70%] rounded-full blur-3xl" style={{ background: `radial-gradient(circle, ${MOODS[i].a}, transparent 65%)` }} />
-            <div className="absolute -bottom-[25%] right-[-10%] h-[85%] w-[70%] rounded-full blur-3xl" style={{ background: `radial-gradient(circle, ${MOODS[i].b}, transparent 65%)` }} />
-          </div>
-          {/* Número gigante de contorno */}
-          <span
-            className="absolute -bottom-[0.18em] right-[2vw] font-display text-[clamp(14rem,38vw,34rem)] font-light leading-none text-transparent [-webkit-text-stroke:1px_rgb(255_255_255/0.12)]"
+      {/* Foto + luz de color de cada servicio */}
+      {SERVICES.map((svc, i) => {
+        const photo = PHOTOS[svc.slug];
+        return (
+          <div
+            key={svc.slug}
+            aria-hidden={i !== index}
+            className="slide absolute inset-0 overflow-hidden bg-[#061614]"
+            data-state={i === index ? "active" : i === prev ? "prev" : undefined}
+            data-first={i === 0 && cycle === 0 ? "" : undefined}
           >
-            {pad(i + 1)}
-          </span>
-        </div>
-      ))}
-      <SeasonalParticles className="z-[3]" />
-      <div className="grain z-[3]" />
+            <div className="kenburns absolute inset-0">
+              {photo && (
+                <Image
+                  src={photo.image}
+                  alt={photo.alt}
+                  fill
+                  preload={i === 0}
+                  placeholder="blur"
+                  sizes="100vw"
+                  className={`object-cover object-[var(--pos-m)] sm:object-[var(--pos)] ${photo.flip ? "-scale-x-100" : ""}`}
+                  style={{ "--pos": photo.position, "--pos-m": photo.positionMobile ?? photo.position } as CSSProperties}
+                />
+              )}
+              <div className="absolute -left-[10%] -top-[20%] h-[80%] w-[70%] rounded-full mix-blend-soft-light blur-3xl" style={{ background: `radial-gradient(circle, ${MOODS[i].a}, transparent 65%)` }} />
+              <div className="absolute -bottom-[25%] right-[-10%] h-[85%] w-[70%] rounded-full mix-blend-soft-light blur-3xl" style={{ background: `radial-gradient(circle, ${MOODS[i].b}, transparent 65%)` }} />
+            </div>
+            {/* Número gigante de contorno */}
+            <span
+              aria-hidden="true"
+              className="absolute -bottom-[0.18em] right-[2vw] z-[2] font-display text-[clamp(14rem,38vw,34rem)] font-light leading-none text-transparent [-webkit-text-stroke:1px_rgb(255_255_255/0.18)]"
+            >
+              {pad(i + 1)}
+            </span>
+          </div>
+        );
+      })}
 
-      {/* Ícono grande animado */}
-      <div key={`icon-${index}`} aria-hidden="true" className="svc-icon pointer-events-none absolute right-[6%] top-[22%] z-[4] hidden text-[#c6e94b] md:block">
-        <div className="svc-icon-float grid h-[clamp(9rem,18vw,15rem)] w-[clamp(9rem,18vw,15rem)] place-items-center rounded-[2.5rem] border border-white/15 bg-white/5 backdrop-blur-md">
-          <ServiceIcon icon={s.icon} size={110} />
-        </div>
-      </div>
+      {/* Velos para legibilidad del texto */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[3] bg-gradient-to-r from-[#061614]/90 via-[#061614]/55 to-[#061614]/5" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[3] bg-gradient-to-t from-[#061614]/90 via-transparent to-[#061614]/50" />
+      <SeasonalParticles className="z-[4]" />
+      <div className="grain z-[4]" />
 
       {/* Texto del servicio activo */}
       <div className="container-site relative z-10 flex h-full flex-col justify-end pb-40 pt-28 sm:justify-center sm:pb-28">
         <div key={index} className="flex max-w-2xl flex-col gap-5" aria-live={paused ? "polite" : "off"}>
+          <span aria-hidden="true" className="svc-icon grid h-14 w-14 place-items-center rounded-2xl border border-white/20 bg-white/10 text-[#c6e94b] backdrop-blur-md sm:h-16 sm:w-16">
+            <ServiceIcon icon={s.icon} size={30} />
+          </span>
           <span className="eyebrow eyebrow-in" style={{ "--d": "0.15s" } as CSSProperties}>
             <span className="pulse-dot" aria-hidden="true" />
             Servicio {pad(index + 1)} · {s.kicker}
