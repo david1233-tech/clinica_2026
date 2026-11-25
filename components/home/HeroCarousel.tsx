@@ -5,6 +5,7 @@ import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { ArrowRight, CaretLeft, CaretRight, WhatsappLogo } from "@phosphor-icons/react";
 import { SeasonalParticles } from "@/components/effects/SeasonalParticles";
+import { SeasonalGreeting } from "@/components/home/SeasonalGreeting";
 import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
 import { prefersReducedMotion } from "@/lib/motion";
 import { SITE } from "@/lib/site";
@@ -155,6 +156,13 @@ export function HeroCarousel() {
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[3] bg-gradient-to-t from-black/85 via-transparent to-black/45" />
       <SeasonalParticles className="z-[4]" />
       <div className="grain z-[4]" />
+
+      {/* Saludo de la fecha o estación (Navidad, Año Nuevo, Fiestas Patrias...) */}
+      <div className="container-site pointer-events-none absolute inset-x-0 top-24 z-20 flex justify-start sm:top-28 sm:justify-end">
+        <div className="pointer-events-auto">
+          <SeasonalGreeting />
+        </div>
+      </div>
 
       {/* Texto de la diapositiva activa (se vuelve a montar para repetir la entrada) */}
       <div className="container-site relative z-10 flex h-full flex-col justify-end pb-36 pt-28 sm:justify-center sm:pb-28">

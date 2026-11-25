@@ -1,7 +1,6 @@
 import type { CSSProperties } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { LogoTree } from "@/components/brand/LogoTree";
-import { SeasonalParticles } from "@/components/effects/SeasonalParticles";
 import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
 import { Aurora } from "@/components/ui/Aurora";
 
@@ -11,7 +10,7 @@ type Props = {
   accent?: string;
   after?: string;
   description: string;
-  /** Sin foto, la portada usa auroras, partículas y el árbol del logo (así ninguna imagen se repite). */
+  /** Sin foto, la portada usa auroras y el árbol del logo (así ninguna imagen se repite). */
   image?: StaticImageData;
   imageAlt?: string;
   imagePosition?: string;
@@ -32,7 +31,6 @@ export function PageHeader({ eyebrow, before, accent, after, description, image,
       ) : (
         <>
           <Aurora className="opacity-90" />
-          <SeasonalParticles className="-z-10" />
           <LogoTree
             animated
             startDelay={0.6}

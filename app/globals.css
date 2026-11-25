@@ -563,6 +563,24 @@ body {
 
 /* ===== Transición entre páginas (app/template.tsx) ===== */
 /* ===== Carrusel de Servicios: ícono grande que entra girando y flota ===== */
+/* Saludo de temporada en la portada del inicio */
+.season-greet {
+  animation: season-greet-in 1s var(--ease-out-expo) calc(var(--intro-delay) + var(--d, 0s)) both;
+}
+.season-greet-icon {
+  animation: season-swing 2.8s ease-in-out calc(var(--intro-delay) + 2.6s) infinite;
+}
+@keyframes season-greet-in {
+  from { opacity: 0; transform: translateY(-16px) scale(0.92); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes season-swing {
+  0%, 60%, 100% { transform: rotate(0); }
+  15% { transform: rotate(-14deg) scale(1.08); }
+  30% { transform: rotate(10deg); }
+  45% { transform: rotate(-5deg); }
+}
+
 .svc-icon {
   animation: svc-icon-in 1.1s var(--ease-out-expo) calc(var(--intro-delay) + 0.35s) both;
 }

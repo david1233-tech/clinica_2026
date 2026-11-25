@@ -1,9 +1,11 @@
 export type EffectKey =
   | "navidad"
   | "anio-nuevo"
+  | "san-valentin"
   | "dia-madre"
   | "dia-padre"
   | "fiestas-patrias"
+  | "aniversario-arequipa"
   | "primavera"
   | "verano"
   | "otono"
@@ -43,6 +45,12 @@ const SEASONS: Record<EffectKey, Season> = {
     message: "Un año más para cuidarte de forma natural.",
     effect: "anio-nuevo",
   },
+  "san-valentin": {
+    key: "san-valentin",
+    greeting: "Feliz Día del Amor y la Amistad",
+    message: "Cuidarte también es una forma de querer.",
+    effect: "san-valentin",
+  },
   "dia-madre": {
     key: "dia-madre",
     greeting: "Feliz Día de la Madre",
@@ -60,6 +68,12 @@ const SEASONS: Record<EffectKey, Season> = {
     greeting: "Felices Fiestas Patrias",
     message: "Celebremos al Perú con salud.",
     effect: "fiestas-patrias",
+  },
+  "aniversario-arequipa": {
+    key: "aniversario-arequipa",
+    greeting: "Feliz aniversario, Arequipa",
+    message: "Orgullosos de cuidar la salud de la Ciudad Blanca.",
+    effect: "aniversario-arequipa",
   },
   primavera: {
     key: "primavera",
@@ -137,13 +151,15 @@ export function resolveSeason(now: Date, preview?: string): Season {
   const mothersDay = nthSunday(year, 5, 2);
   const fathersDay = nthSunday(year, 6, 3);
 
-  if (inRange(md, 1201, 1227)) return SEASONS.navidad;
+  if (inRange(md, 1115, 1227)) return SEASONS.navidad;
   if (inRange(md, 1228, 106)) return SEASONS["anio-nuevo"];
+  if (inRange(md, 207, 214)) return SEASONS["san-valentin"];
   if (inRange(md, toMd(5, mothersDay - 7), toMd(5, mothersDay)))
     return SEASONS["dia-madre"];
   if (inRange(md, toMd(6, fathersDay - 7), toMd(6, fathersDay)))
     return SEASONS["dia-padre"];
   if (inRange(md, 715, 731)) return SEASONS["fiestas-patrias"];
+  if (inRange(md, 808, 815)) return SEASONS["aniversario-arequipa"];
 
   if (inRange(md, 923, 1220)) return SEASONS.primavera;
   if (inRange(md, 1221, 320)) return SEASONS.verano;

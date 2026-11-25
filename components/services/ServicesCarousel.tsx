@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { ArrowDown, CaretLeft, CaretRight, WhatsappLogo } from "@phosphor-icons/react";
-import { SeasonalParticles } from "@/components/effects/SeasonalParticles";
 import { AnimatedTitle } from "@/components/ui/AnimatedTitle";
 import { ServiceIcon } from "@/components/ui/ServiceIcon";
 import { SERVICES } from "@/lib/data/services";
@@ -131,7 +130,6 @@ export function ServicesCarousel() {
       {/* Velos para legibilidad del texto */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[3] bg-gradient-to-r from-[#061614]/90 via-[#061614]/55 to-[#061614]/5" />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[3] bg-gradient-to-t from-[#061614]/90 via-transparent to-[#061614]/50" />
-      <SeasonalParticles className="z-[4]" />
       <div className="grain z-[4]" />
 
       {/* Texto del servicio activo */}

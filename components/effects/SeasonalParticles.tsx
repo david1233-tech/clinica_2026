@@ -5,28 +5,43 @@ import { prefersReducedMotion } from "@/lib/motion";
 import type { EffectKey } from "@/lib/seasons";
 import { useSeason } from "@/lib/useSeason";
 
-type Shape = "leaf" | "petal" | "snow" | "spark" | "confetti";
-type Fx = { shape: Shape; dark: string[]; light: string[]; count: number; fireflies?: boolean };
-
-/** Apariencia de las partículas por temporada (claro y oscuro). */
-const FX: Record<EffectKey, Fx> = {
-  navidad: { shape: "snow", dark: ["#ffffff", "#d9f3ff"], light: ["#8fbccc", "#b9d8e2"], count: 55 },
-  "anio-nuevo": { shape: "spark", dark: ["#ffc15e", "#ffe3a3", "#c6e94b"], light: ["#e0a100", "#1a9480", "#ffb238"], count: 55 },
-  "dia-madre": { shape: "petal", dark: ["#ff9eb5", "#ffc2d1", "#ffffff"], light: ["#f07a9a", "#ffb3c6", "#ffc23c"], count: 34 },
-  "dia-padre": { shape: "leaf", dark: ["#2ec4a6", "#1d5560", "#c6e94b"], light: ["#1a9480", "#1d5560", "#9cc43a"], count: 30 },
-  "fiestas-patrias": { shape: "confetti", dark: ["#d91023", "#ffffff"], light: ["#d91023", "#f5b5bc"], count: 45 },
-  primavera: { shape: "leaf", dark: ["#c6e94b", "#2ec4a6", "#4caf50", "#9cc43a"], light: ["#9cc43a", "#1a9480", "#4caf50", "#ffc23c"], count: 34, fireflies: true },
-  verano: { shape: "spark", dark: ["#ffc23c", "#ffd978", "#ff9f45"], light: ["#ffb238", "#ff9f45", "#1a9480"], count: 40 },
-  otono: { shape: "leaf", dark: ["#e8a33d", "#c9662b", "#9cc43a"], light: ["#d98a1f", "#b5531f", "#9cc43a"], count: 32 },
-  invierno: { shape: "snow", dark: ["#ffffff", "#cfe9f2"], light: ["#8fbccc", "#b9d8e2"], count: 40 },
+type Shape = "leaf" | "petal" | "snow" | "spark" | "confetti" | "heart";
+type Fx = {
+  shape: Shape;
+  colors: string[];
+  count: number;
+  /** Luciérnagas que flotan entre las partículas. */
+  fireflies?: boolean;
+  /** Fuegos artificiales que estallan cada cierto tiempo. */
+  fireworks?: string[];
 };
 
-type P = { x: number; y: number; s: number; vx: number; vy: number; rot: number; vr: number; ph: number; c: string; a: number; fly?: boolean };
+/** Partículas de cada temporada. Van sobre la portada del inicio, que siempre es oscura. */
+const FX: Record<EffectKey, Fx> = {
+  navidad: { shape: "snow", colors: ["#ffffff", "#e6f6ff", "#d9f3ff"], count: 85 },
+  "anio-nuevo": { shape: "spark", colors: ["#ffc15e", "#ffe3a3", "#c6e94b"], count: 40, fireworks: ["#ffc15e", "#ffe3a3", "#c6e94b", "#ffffff", "#2ec4a6"] },
+  "san-valentin": { shape: "heart", colors: ["#ff6b8b", "#ff9eb5", "#ffc2d1"], count: 34 },
+  "dia-madre": { shape: "petal", colors: ["#ff9eb5", "#ffc2d1", "#ffffff"], count: 40 },
+  "dia-padre": { shape: "leaf", colors: ["#2ec4a6", "#1d5560", "#c6e94b"], count: 30 },
+  "fiestas-patrias": { shape: "confetti", colors: ["#d91023", "#ffffff"], count: 60 },
+  "aniversario-arequipa": { shape: "confetti", colors: ["#ffffff", "#ffd978", "#c6e94b"], count: 45, fireworks: ["#ffffff", "#ffd978", "#ffe3a3"] },
+  primavera: { shape: "leaf", colors: ["#c6e94b", "#2ec4a6", "#4caf50", "#9cc43a"], count: 34, fireflies: true },
+  verano: { shape: "spark", colors: ["#ffc23c", "#ffd978", "#ff9f45"], count: 40 },
+  otono: { shape: "leaf", colors: ["#e8a33d", "#c9662b", "#9cc43a"], count: 32 },
+  invierno: { shape: "snow", colors: ["#ffffff", "#cfe9f2"], count: 50 },
+};
+
+type P = { x: number; y: number; s: number; vx: number; vy: number; rot: number; vr: number; ph: number; c: string; a: number; fly?: boolean; crystal?: boolean };
+type Spark = { x: number; y: number; vx: number; vy: number; life: number; max: number; c: string };
 
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
 const pick = <T,>(list: T[]) => list[Math.floor(Math.random() * list.length)];
 
-/** Partículas de la temporada activa sobre un canvas. Respeta "reducir movimiento". */
+/**
+ * Animación de la fecha o estación activa (nieve en Navidad, fuegos en Año Nuevo, corazones en
+ * San Valentín...). Cambia sola según el calendario de `lib/seasons.ts`. Con "reducir movimiento"
+ * se dibuja una sola vez, quieta.
+ */
 export function SeasonalParticles({ className = "" }: { className?: string }) {
   const ref = useRef<HTMLCanvasElement>(null);
   const season = useSeason();
@@ -35,17 +50,19 @@ export function SeasonalParticles({ className = "" }: { className?: string }) {
   useEffect(() => {
     const canvas = ref.current;
     if (!canvas || !effect) return;
-    if (prefersReducedMotion()) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const fx = FX[effect];
+    const still = prefersReducedMotion();
     const rising = fx.shape === "spark";
     let W = 0;
     let H = 0;
     let raf = 0;
     let t = 0;
     let visible = true;
+    let nextBurst = 60;
+    const sparks: Spark[] = [];
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -57,23 +74,26 @@ export function SeasonalParticles({ className = "" }: { className?: string }) {
     };
 
     const make = (fresh: boolean): P => {
-      const dark = document.documentElement.dataset.theme === "dark";
-      const colors = dark ? fx.dark : fx.light;
       if (fx.fireflies && Math.random() < 0.28) {
-        return { fly: true, x: rnd(0, W), y: rnd(H * 0.2, H), s: rnd(1.2, 2.6), vx: rnd(-0.25, 0.25), vy: rnd(-0.2, 0.2), rot: 0, vr: 0, ph: rnd(0, 6.28), c: dark ? "#e9ffb0" : "#ffc23c", a: 1 };
+        return { fly: true, x: rnd(0, W), y: rnd(H * 0.2, H), s: rnd(1.2, 2.6), vx: rnd(-0.25, 0.25), vy: rnd(-0.2, 0.2), rot: 0, vr: 0, ph: rnd(0, 6.28), c: "#e9ffb0", a: 1 };
       }
-      const y = rising ? (fresh ? rnd(H * 0.3, H) : H + 10) : fresh ? rnd(-H, H) : -20;
+      const y = rising ? (fresh ? rnd(H * 0.3, H) : H + 10) : fresh ? rnd(-H * 0.2, H) : -20;
+      const snow = fx.shape === "snow";
+      // En la nieve, algunos copos son cristales de seis puntas, más grandes y lentos.
+      const crystal = snow && Math.random() < 0.3;
+      const small = snow || rising;
       return {
         x: rnd(0, W),
         y,
-        s: fx.shape === "snow" || fx.shape === "spark" ? rnd(1.2, 3) : rnd(5, 10),
+        s: crystal ? rnd(5, 10) : small ? rnd(1.2, 3) : fx.shape === "heart" ? rnd(10, 17) : rnd(5, 10),
         vx: rnd(-0.25, 0.35),
-        vy: rising ? -rnd(0.35, 1.1) : rnd(0.35, 0.9),
+        vy: rising ? -rnd(0.35, 1.1) : crystal ? rnd(0.3, 0.6) : rnd(0.4, 1),
         rot: rnd(0, 6.28),
-        vr: rnd(-0.03, 0.03),
+        vr: rnd(-0.02, 0.02),
         ph: rnd(0, 6.28),
-        c: pick(colors),
-        a: rnd(0.45, 0.85),
+        c: pick(fx.colors),
+        a: crystal ? rnd(0.55, 0.9) : rnd(0.45, 0.85),
+        crystal,
       };
     };
 
@@ -86,7 +106,25 @@ export function SeasonalParticles({ className = "" }: { className?: string }) {
       ctx.translate(p.x, p.y);
       ctx.rotate(p.rot);
       ctx.fillStyle = p.c;
+      ctx.strokeStyle = p.c;
       ctx.beginPath();
+      if (p.crystal) {
+        // Copo de nieve: tres ejes con ramitas.
+        ctx.lineWidth = 1.1;
+        ctx.lineCap = "round";
+        for (let k = 0; k < 6; k++) {
+          ctx.rotate(Math.PI / 3);
+          ctx.moveTo(0, 0);
+          ctx.lineTo(0, -p.s);
+          ctx.moveTo(0, -p.s * 0.55);
+          ctx.lineTo(p.s * 0.28, -p.s * 0.8);
+          ctx.moveTo(0, -p.s * 0.55);
+          ctx.lineTo(-p.s * 0.28, -p.s * 0.8);
+        }
+        ctx.stroke();
+        ctx.restore();
+        return;
+      }
       switch (fx.shape) {
         case "leaf":
           ctx.moveTo(0, -p.s);
@@ -99,6 +137,13 @@ export function SeasonalParticles({ className = "" }: { className?: string }) {
         case "confetti":
           ctx.rect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
           break;
+        case "heart": {
+          const s = p.s / 10;
+          ctx.moveTo(0, 3 * s);
+          ctx.bezierCurveTo(-10 * s, -4 * s, -5 * s, -11 * s, 0, -5 * s);
+          ctx.bezierCurveTo(5 * s, -11 * s, 10 * s, -4 * s, 0, 3 * s);
+          break;
+        }
         default:
           ctx.arc(0, 0, p.s, 0, Math.PI * 2);
       }
@@ -106,7 +151,43 @@ export function SeasonalParticles({ className = "" }: { className?: string }) {
       ctx.restore();
     };
 
-    const loop = () => {
+    const burst = () => {
+      if (!fx.fireworks) return;
+      const x = rnd(W * 0.35, W * 0.92);
+      const y = rnd(H * 0.12, H * 0.45);
+      const c = pick(fx.fireworks);
+      const n = W < 640 ? 34 : 54;
+      for (let k = 0; k < n; k++) {
+        const ang = (k / n) * Math.PI * 2 + rnd(-0.05, 0.05);
+        const sp = rnd(1.4, 3.4);
+        sparks.push({ x, y, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, life: 0, max: rnd(55, 85), c: Math.random() < 0.25 ? "#ffffff" : c });
+      }
+    };
+
+    const drawSparks = () => {
+      ctx.globalCompositeOperation = "lighter";
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const s = sparks[i];
+        s.life += 1;
+        s.vx *= 0.97;
+        s.vy = s.vy * 0.97 + 0.035;
+        const px = s.x;
+        const py = s.y;
+        s.x += s.vx;
+        s.y += s.vy;
+        ctx.globalAlpha = Math.max(0, 1 - s.life / s.max);
+        ctx.strokeStyle = s.c;
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(px - s.vx * 2, py - s.vy * 2);
+        ctx.lineTo(s.x, s.y);
+        ctx.stroke();
+        if (s.life > s.max) sparks.splice(i, 1);
+      }
+      ctx.globalCompositeOperation = "source-over";
+    };
+
+    const frame = () => {
       t += 1;
       ctx.clearRect(0, 0, W, H);
       for (let i = 0; i < parts.length; i++) {
@@ -122,20 +203,36 @@ export function SeasonalParticles({ className = "" }: { className?: string }) {
           if (p.x < -10 || p.x > W + 10 || p.y < -10 || p.y > H + 10) parts[i] = make(true);
           continue;
         }
-        p.x += p.vx + Math.sin(t * 0.02 + p.ph) * 0.45;
+        p.x += p.vx + Math.sin(t * 0.02 + p.ph) * (p.crystal ? 0.3 : 0.45);
         p.y += p.vy;
         p.rot += p.vr;
         ctx.globalAlpha = rising ? p.a * Math.min(1, Math.max(0, p.y / H)) : p.a;
-        if (rising) {
+        if (rising || p.crystal) {
           ctx.shadowColor = p.c;
-          ctx.shadowBlur = 10;
+          ctx.shadowBlur = p.crystal ? 6 : 10;
         }
         draw(p);
         ctx.shadowBlur = 0;
         const out = rising ? p.y < H * 0.05 : p.y > H + 20;
         if (out || p.x > W + 30 || p.x < -30) parts[i] = make(false);
       }
+      if (fx.fireworks) {
+        if (--nextBurst <= 0) {
+          burst();
+          nextBurst = Math.round(rnd(70, 150));
+        }
+        drawSparks();
+      }
       ctx.globalAlpha = 1;
+    };
+
+    if (still) {
+      frame();
+      return;
+    }
+
+    const loop = () => {
+      frame();
       if (visible) raf = requestAnimationFrame(loop);
     };
 
