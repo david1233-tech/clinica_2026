@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { CalendarCheck, FacebookLogo, Storefront, TiktokLogo, WhatsappLogo } from "@phosphor-icons/react";
 import { Logo } from "@/components/brand/Logo";
+import { MusicToggle } from "@/components/layout/MusicToggle";
 import { ThemeToggle } from "@/components/layout/ThemeToggle";
 import { NAV_LINKS, SITE, SOCIAL_LINKS } from "@/lib/site";
 
@@ -67,6 +68,7 @@ export function SiteHeader() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <MusicToggle />
             <ThemeToggle />
             <a href={SITE.whatsappUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary hidden py-3! sm:inline-flex">
               <CalendarCheck size={18} weight="bold" aria-hidden="true" />
